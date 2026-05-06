@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "type": "press-theme",
+  "value": "arcus",
+  "label": "Arcus",
+  "version": "3.4.0",
+  "contractVersion": 1,
+  "release": {
+    "tag": "v3.4.0",
+    "htmlUrl": "https://github.com/EkilyHQ/Press-Theme-Arcus/releases/tag/v3.4.0",
+    "publishedAt": "2026-05-06T18:12:00Z",
+    "notes": ""
+  },
+  "asset": {
+    "name": "press-theme-arcus-v3.4.0.zip",
+    "url": "https://github.com/EkilyHQ/Press-Theme-Arcus/releases/download/v3.4.0/press-theme-arcus-v3.4.0.zip",
+    "size": 30527,
+    "digest": "sha256:9acca2178bfa1f7c49ae5267826e38d4e08a493603ab14cc007d13f85264cf81"
+  },
+  "files": [
+    "modules/interactions.js",
+    "modules/layout.js",
+    "theme.css",
+    "theme.json"
+  ]
+}
