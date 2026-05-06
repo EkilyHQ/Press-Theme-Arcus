@@ -120,7 +120,7 @@ jobs:
             files
           };
           fs.writeFileSync('theme-release.json', `${JSON.stringify(manifest, null, 2)}\n`);
-NODE
+          NODE
 
       - name: Commit manifest
         run: |
