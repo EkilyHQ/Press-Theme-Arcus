@@ -1,85 +1,158 @@
 name: Theme Release
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'theme/**'
   workflow_dispatch:
     inputs:
       tag:
-        description: Release tag, for example v3.4.0
-        required: true
-      slug:
-        description: Theme slug, for example arcus
-        required: true
-      label:
-        description: Theme label, for example Arcus
-        required: true
+        description: Optional release tag, for example v3.5.0. Leave empty to bump patch.
+        required: false
 
 permissions:
   contents: write
 
+concurrency:
+  group: theme-release-${{ github.repository }}
+  cancel-in-progress: false
+
 jobs:
   release:
+    if: github.event_name != 'push' || !contains(github.event.head_commit.message, 'Update theme release manifest')
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      THEME_SLUG: arcus
+      THEME_LABEL: Arcus
+      REQUESTED_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || '' }}
     steps:
       - name: Checkout theme
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Plan release
+        id: plan
+        run: |
+          set -euo pipefail
+          git fetch --tags --force
+
+          latest_tag="$(gh release view --json tagName -q '.tagName' 2>/dev/null || true)"
+          if [[ -z "${latest_tag}" ]]; then
+            latest_tag="$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' | sort -V | tail -n 1 || true)"
+          fi
+
+          requested_tag="${REQUESTED_TAG:-}"
+          if [[ -n "${requested_tag}" ]]; then
+            next_tag="${requested_tag}"
+          elif [[ "${latest_tag}" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            major="${BASH_REMATCH[1]}"
+            minor="${BASH_REMATCH[2]}"
+            patch="${BASH_REMATCH[3]}"
+            next_tag="v${major}.${minor}.$((patch + 1))"
+          else
+            version="$(node -p "require('./theme/theme.json').version || '0.0.1'")"
+            next_tag="v${version}"
+          fi
+
+          if [[ ! "${next_tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "tag must be vMAJOR.MINOR.PATCH" >&2
+            exit 2
+          fi
+
+          if [[ -z "${requested_tag}" && -n "${latest_tag}" ]]; then
+            changed_files="$(git diff --name-only "${latest_tag}..HEAD" -- theme)"
+            if [[ -z "${changed_files}" ]]; then
+              {
+                echo "should_release=false"
+                echo "latest_tag=${latest_tag}"
+              } >> "${GITHUB_OUTPUT}"
+              exit 0
+            fi
+          fi
+
+          if gh release view "${next_tag}" >/dev/null 2>&1; then
+            echo "release ${next_tag} already exists" >&2
+            exit 1
+          fi
+          if git ls-remote --exit-code --tags origin "refs/tags/${next_tag}" >/dev/null 2>&1; then
+            echo "remote tag ${next_tag} already exists" >&2
+            exit 1
+          fi
+
+          {
+            echo "should_release=true"
+            echo "latest_tag=${latest_tag}"
+            echo "next_tag=${next_tag}"
+            echo "version=${next_tag#v}"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Prepare release version
+        if: steps.plan.outputs.should_release == 'true'
+        run: |
+          set -euo pipefail
+          version="${{ steps.plan.outputs.version }}"
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'theme/theme.json';
+          const version = process.env.VERSION;
+          const manifest = JSON.parse(fs.readFileSync(path, 'utf8'));
+          manifest.version = version;
+          fs.writeFileSync(path, `${JSON.stringify(manifest, null, 2)}\n`);
+          NODE
+        env:
+          VERSION: ${{ steps.plan.outputs.version }}
 
       - name: Checkout Press checks
+        if: steps.plan.outputs.should_release == 'true'
         uses: actions/checkout@v4
         with:
           repository: EkilyHQ/Press
           path: .press
 
       - name: Validate theme contract
+        if: steps.plan.outputs.should_release == 'true'
         run: |
           set -euo pipefail
-          rm -rf ".press/assets/themes/${{ inputs.slug }}"
-          mkdir -p ".press/assets/themes/${{ inputs.slug }}"
-          rsync -a ./theme/ ".press/assets/themes/${{ inputs.slug }}/"
+          rm -rf ".press/assets/themes/${THEME_SLUG}"
+          mkdir -p ".press/assets/themes/${THEME_SLUG}"
+          rsync -a ./theme/ ".press/assets/themes/${THEME_SLUG}/"
           cd .press
           node --experimental-default-type=module scripts/test-theme-contracts.js
 
       - name: Package theme
+        if: steps.plan.outputs.should_release == 'true'
         id: package
         run: |
           set -euo pipefail
-          tag="${{ inputs.tag }}"
-          slug="${{ inputs.slug }}"
-          if [[ ! "${tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "tag must be vMAJOR.MINOR.PATCH" >&2
-            exit 2
-          fi
-          version="${tag#v}"
-          asset="press-theme-${slug}-${tag}.zip"
-          mkdir -p dist "press-theme-${slug}"
-          rsync -a ./theme/ "press-theme-${slug}/"
-          find "press-theme-${slug}" -type f | sort | sed "s#^press-theme-${slug}/##" > dist/files.txt
-          zip -qr "dist/${asset}" "press-theme-${slug}"
+          tag="${{ steps.plan.outputs.next_tag }}"
+          version="${{ steps.plan.outputs.version }}"
+          asset="press-theme-${THEME_SLUG}-${tag}.zip"
+          mkdir -p dist "press-theme-${THEME_SLUG}"
+          rsync -a ./theme/ "press-theme-${THEME_SLUG}/"
+          find "press-theme-${THEME_SLUG}" -type f | sort | sed "s#^press-theme-${THEME_SLUG}/##" > dist/files.txt
+          zip -qr "dist/${asset}" "press-theme-${THEME_SLUG}"
           size="$(wc -c < "dist/${asset}" | tr -d ' ')"
           digest="$(sha256sum "dist/${asset}" | awk '{print $1}')"
           {
             echo "version=${version}"
             echo "asset=${asset}"
+            echo "path=dist/${asset}"
             echo "size=${size}"
             echo "digest=${digest}"
           } >> "${GITHUB_OUTPUT}"
 
-      - name: Publish GitHub Release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          tag="${{ inputs.tag }}"
-          asset="dist/${{ steps.package.outputs.asset }}"
-          gh release view "${tag}" >/dev/null 2>&1 && gh release delete "${tag}" --yes --cleanup-tag
-          gh release create "${tag}" "${asset}" --title "${tag}" --notes "Theme release ${tag}"
-
-      - name: Update theme-release.json
+      - name: Update release manifest
+        if: steps.plan.outputs.should_release == 'true'
         run: |
           set -euo pipefail
           repo="${GITHUB_REPOSITORY}"
-          tag="${{ inputs.tag }}"
-          slug="${{ inputs.slug }}"
-          label="${{ inputs.label }}"
+          tag="${{ steps.plan.outputs.next_tag }}"
+          slug="${THEME_SLUG}"
+          label="${THEME_LABEL}"
           version="${{ steps.package.outputs.version }}"
           asset="${{ steps.package.outputs.asset }}"
           size="${{ steps.package.outputs.size }}"
@@ -122,12 +195,30 @@ jobs:
           fs.writeFileSync('theme-release.json', `${JSON.stringify(manifest, null, 2)}\n`);
           NODE
 
-      - name: Commit manifest
+      - name: Commit release metadata
+        if: steps.plan.outputs.should_release == 'true'
+        id: commit
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add theme-release.json
-          git diff --cached --quiet && exit 0
-          git commit -m "Update theme release manifest"
-          git push
+          git add theme/theme.json theme-release.json
+          if git diff --cached --quiet; then
+            echo "No release metadata changes to commit."
+          else
+            git commit -m "Update theme release manifest ${{ steps.plan.outputs.next_tag }}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "${GITHUB_OUTPUT}"
+
+      - name: Publish GitHub Release
+        if: steps.plan.outputs.should_release == 'true'
+        run: |
+          set -euo pipefail
+          tag="${{ steps.plan.outputs.next_tag }}"
+          asset="${{ steps.package.outputs.path }}"
+          target="${{ steps.commit.outputs.sha }}"
+          gh release create "${tag}" "${asset}" \
+            --target "${target}" \
+            --title "${tag}" \
+            --notes "Theme release ${tag}"
