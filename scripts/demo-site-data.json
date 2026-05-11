@@ -1,0 +1,84 @@
+{
+  "slug": "arcus",
+  "label": "Arcus",
+  "repo": "EkilyHQ/Press-Theme-Arcus",
+  "siteTitle": "Mira Vale Studio Notes",
+  "siteDescription": "A fictional architecture and light diary for showing the soft, layered Arcus theme.",
+  "author": "Mira Vale",
+  "aboutTitle": "About Mira Vale",
+  "about": "Mira Vale is a fictional spatial designer who keeps short notes on arches, thresholds, morning light, and the small rituals that make a quiet room legible. The writing is invented; the cited visual sources are public-domain or CC0 materials used as prompts for the demo.",
+  "posts": [
+    {
+      "id": "loring-arch-morning",
+      "title": "Morning Inside the Loring Arch",
+      "date": "2026-05-02",
+      "tags": ["architecture", "threshold", "study"],
+      "excerpt": "A quiet field note on how a long arch can make a plain route feel ceremonial.",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Loring_Arch_Interior.jpg",
+      "source": {
+        "label": "Loring Arch Interior, National Park Service record on Wikimedia Commons",
+        "page": "https://commons.wikimedia.org/wiki/File:Loring_Arch_Interior.jpg",
+        "license": "Public domain; based on work by a National Park Service employee created as part of official duties"
+      },
+      "body": [
+        "The first hour inside the arch is never about scale. It is about repetition: rib, shadow, rib, shadow, a cadence that lets the eye walk ahead before the feet do.",
+        "Arcus renders this kind of note well because its rail and content surfaces stay calm. The theme leaves enough air around captions, lists, and small metadata for the architecture to feel measured rather than catalogued.",
+        "I keep returning to the end of the span, where the curve compresses into a rectangle of light. A threshold can be generous and exact at the same time."
+      ]
+    },
+    {
+      "id": "sunrise-as-plan",
+      "title": "Reading Sunrise as a Floor Plan",
+      "date": "2026-04-20",
+      "tags": ["light", "composition", "color"],
+      "excerpt": "A fictional studio exercise using Monet's public-domain sunrise as a study in layered circulation.",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Monet_-_Impression%2C_Sunrise.jpg",
+      "source": {
+        "label": "Claude Monet, Impression, Sunrise on Wikimedia Commons",
+        "page": "https://commons.wikimedia.org/wiki/File:Monet_-_Impression,_Sunrise.jpg",
+        "license": "Public domain; the work is identified by Commons as free of known copyright restrictions"
+      },
+      "body": [
+        "For this sketch I treated the harbor like a small plan: the sun as a meeting room, the smoke as circulation, the boats as furniture that can be moved without changing the structure.",
+        "The exercise is useful because it forces hierarchy. Arcus keeps that hierarchy visible with soft accent color, readable post metadata, and a broad content column that supports both prose and image-led notes.",
+        "A plan does not need to explain every motion. It needs to preserve the few motions that make the place understandable."
+      ]
+    },
+    {
+      "id": "solar-vault",
+      "title": "A Solar Vault for Late Notes",
+      "date": "2026-03-28",
+      "tags": ["sky", "archive", "night"],
+      "excerpt": "A late-night note on using a solar image as a ceiling study rather than a science illustration.",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg",
+      "source": {
+        "label": "The Sun by NASA's Solar Dynamics Observatory on Wikimedia Commons",
+        "page": "https://commons.wikimedia.org/wiki/File:The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg",
+        "license": "Public domain; created solely by NASA"
+      },
+      "body": [
+        "The image began as a reference for a circular skylight and ended as a note about ceilings. A good ceiling is not a lid. It is a weather system the room agrees to live under.",
+        "I tested short callouts, a numbered list, and a few inline fragments beside the image. Arcus gives technical details a gentle frame without turning the page into a dashboard.",
+        "The important question for the demo is simple: can a post carry a strong image and still keep the writing first? Here, the answer is yes."
+      ]
+    },
+    {
+      "id": "glass-under-arch",
+      "title": "The Specimen Case Under the Arch",
+      "date": "2026-02-16",
+      "tags": ["collection", "detail", "material"],
+      "excerpt": "A small object note that uses a public-domain butterfly drawing to test dense text and source notes.",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Butterfly_Under_Glass_Drawing.jpg",
+      "source": {
+        "label": "Butterfly Under Glass Drawing on Wikimedia Commons",
+        "page": "https://commons.wikimedia.org/wiki/File:Butterfly_Under_Glass_Drawing.jpg",
+        "license": "Public domain in the United States; published before January 1, 1931"
+      },
+      "body": [
+        "A specimen case is a tiny building. It has a base, a cover, a viewing rule, and a strong opinion about distance.",
+        "I placed this note in the demo because Arcus should make quiet archival material feel intentional. The rounded containers and low-contrast outlines help old line art sit naturally beside contemporary prose.",
+        "The object is fragile, but the page should not feel precious. It should simply say: look here, then look again."
+      ]
+    }
+  ]
+}
