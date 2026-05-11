@@ -16,9 +16,11 @@ image: "https://commons.wikimedia.org/wiki/Special:FilePath/The_Sun_by_the_Atmos
 
 The image began as a reference for a circular skylight and ended as a note about ceilings. A good ceiling is not a lid. It is a weather system the room agrees to live under.
 
-I tested short callouts, a numbered list, and a few inline fragments beside the image. Arcus gives technical details a gentle frame without turning the page into a dashboard.
+We used the solar disk to test a library ceiling with indirect light around a central plaster oculus. The danger was obvious: make the ceiling too literal and the room becomes a planetarium. Keep it abstract and the light can still feel alive.
 
-The important question for the demo is simple: can a post carry a strong image and still keep the writing first? Here, the answer is yes.
+The practical detail is a twelve-inch service ring above the cove, painted the same white as the plaster but reachable from the attic. Maintenance access is not glamorous, yet it is the difference between a lighting idea and a long-term building detail.
+
+The important question for the demo is simple: can a post carry a strong image and still keep the writing first? Arcus makes that balance feel natural.
 
 ## Source Note
 Primary image/source: [The Sun by NASA's Solar Dynamics Observatory on Wikimedia Commons](https://commons.wikimedia.org/wiki/File:The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg). Public domain; created solely by NASA.
