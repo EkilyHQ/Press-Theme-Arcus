@@ -3,17 +3,21 @@
   "label": "Arcus",
   "repo": "EkilyHQ/Press-Theme-Arcus",
   "siteTitle": "Mira Vale Studio Notes",
-  "siteDescription": "A fictional architecture and light diary for showing the soft, layered Arcus theme.",
+  "siteDescription": "A small architecture studio journal about homes, thresholds, light studies, and material decisions.",
   "author": "Mira Vale",
-  "aboutTitle": "About Mira Vale",
-  "about": "Mira Vale is a fictional spatial designer who keeps short notes on arches, thresholds, morning light, and the small rituals that make a quiet room legible. The writing is invented; the cited visual sources are public-domain or CC0 materials used as prompts for the demo.",
+  "aboutTitle": "About Mira Vale Studio",
+  "about": "Mira Vale Studio Notes is a fictional practice journal from a two-person residential architecture studio in Portland, Maine. The demo reads like a real studio site: project diaries, material tests, client-facing field notes, and short essays about how rooms become legible over time. Names, addresses, budgets, and commissions are invented for the theme demo. Visual source material is public-domain or CC0-compatible and is cited in each article so the site can exercise Press source notes without pretending to document real projects.",
   "posts": [
     {
       "id": "loring-arch-morning",
       "title": "Morning Inside the Loring Arch",
       "date": "2026-05-02",
-      "tags": ["architecture", "threshold", "study"],
-      "excerpt": "A quiet field note on how a long arch can make a plain route feel ceremonial.",
+      "tags": [
+        "architecture",
+        "threshold",
+        "study"
+      ],
+      "excerpt": "A field note on using a long arch study to tune the entry sequence for a coastal house.",
       "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Loring_Arch_Interior.jpg",
       "source": {
         "label": "Loring Arch Interior, National Park Service record on Wikimedia Commons",
@@ -21,17 +25,45 @@
         "license": "Public domain; based on work by a National Park Service employee created as part of official duties"
       },
       "body": [
-        "The first hour inside the arch is never about scale. It is about repetition: rib, shadow, rib, shadow, a cadence that lets the eye walk ahead before the feet do.",
-        "Arcus renders this kind of note well because its rail and content surfaces stay calm. The theme leaves enough air around captions, lists, and small metadata for the architecture to feel measured rather than catalogued.",
-        "I keep returning to the end of the span, where the curve compresses into a rectangle of light. A threshold can be generous and exact at the same time."
+        "We visited the Loring arch before breakfast because the client kept saying she wanted the entry to feel quiet before it felt grand. The building gives a useful answer. It does not announce itself with ornament; it lets repetition do the work. Rib, shadow, rib, shadow, then a plane of light at the end of the span.",
+        "Back at the studio, we translated that rhythm into a forty-foot passage between mudroom and kitchen. The practical move is modest: three shallow beams, a continuous plaster reveal, and a bench that starts before the first doorway. The important part is that the arrival sequence now has a tempo instead of a hallway.",
+        "Arcus is a good host for this kind of note because its surfaces stay calm. Drawings, captions, tags, and source notes all have room to breathe, which makes the page feel like a studio log rather than a sales brochure.",
+        "Open items for the next review: reduce the first beam depth by two inches, test limewash under late afternoon light, and confirm whether the bench can hide the return-air grille without becoming fussy."
+      ]
+    },
+    {
+      "id": "west-stair-material-board",
+      "title": "Material Board for the West Stair",
+      "date": "2026-04-24",
+      "tags": [
+        "materials",
+        "renovation",
+        "stair"
+      ],
+      "excerpt": "A renovation diary entry following the small decisions behind a stair landing that has to work hard.",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/William_Morris_-_Trellis_wallpaper_design.jpg",
+      "source": {
+        "label": "William Morris, Trellis wallpaper design on Wikimedia Commons",
+        "page": "https://commons.wikimedia.org/wiki/File:William_Morris_-_Trellis_wallpaper_design.jpg",
+        "license": "Public domain; the artist died in 1896 and the work is out of copyright"
+      },
+      "body": [
+        "The west stair is only eight steps, but it is where the house changes mood. Downstairs is all shoes, raincoats, and school bags. Upstairs is quieter. The landing has to negotiate both conditions without becoming a decorative pause that nobody uses.",
+        "We pinned the wallpaper study beside three samples: white oak with a clear matte finish, a warm grey linoleum, and a handrail mockup rubbed with black wax. The trellis pattern is too dense for the final wall, but it helped us see the landing as a plane with movement rather than a leftover vertical surface.",
+        "The client asked whether the stair needed a color. The answer was yes, but not a paint-chip kind of color. It needed undertone: the green in the linoleum, the yellow in the oak, the almost-blue of the shadow under the rail.",
+        "Decision log: use the linoleum only on the landing, keep oak on the treads, and move the wall light six inches lower so the handrail casts a readable line at night."
       ]
     },
     {
       "id": "sunrise-as-plan",
       "title": "Reading Sunrise as a Floor Plan",
       "date": "2026-04-20",
-      "tags": ["light", "composition", "color"],
-      "excerpt": "A fictional studio exercise using Monet's public-domain sunrise as a study in layered circulation.",
+      "tags": [
+        "light",
+        "composition",
+        "color"
+      ],
+      "excerpt": "A studio exercise using Monet's sunrise as a study in layered circulation.",
       "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Monet_-_Impression%2C_Sunrise.jpg",
       "source": {
         "label": "Claude Monet, Impression, Sunrise on Wikimedia Commons",
@@ -39,16 +71,44 @@
         "license": "Public domain; the work is identified by Commons as free of known copyright restrictions"
       },
       "body": [
-        "For this sketch I treated the harbor like a small plan: the sun as a meeting room, the smoke as circulation, the boats as furniture that can be moved without changing the structure.",
-        "The exercise is useful because it forces hierarchy. Arcus keeps that hierarchy visible with soft accent color, readable post metadata, and a broad content column that supports both prose and image-led notes.",
-        "A plan does not need to explain every motion. It needs to preserve the few motions that make the place understandable."
+        "For Friday pin-up we treated the harbor like a small floor plan: the sun as a shared room, the smoke as circulation, the boats as movable furniture, and the low horizon as a datum line that makes every other mark measurable.",
+        "The exercise helped the junior team separate atmosphere from organization. A beautiful image can still have a plan. The orange disk is not decoration; it is the only place where the composition asks everyone to gather.",
+        "We used the same reading on the Harbor Lane kitchen. The island became the sun, the pantry became smoke, and the breakfast table became the boat that can drift without confusing the room.",
+        "A plan does not need to explain every motion. It needs to preserve the few motions that make a place understandable when someone enters it carrying groceries, mail, and a half-finished conversation."
+      ]
+    },
+    {
+      "id": "rain-room-window-schedule",
+      "title": "Window Schedule for a Rain Room",
+      "date": "2026-04-06",
+      "tags": [
+        "windows",
+        "weather",
+        "residential"
+      ],
+      "excerpt": "Notes from a mock client packet for a room designed around storms, towels, and wet dogs.",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Rain_on_window.jpg",
+      "source": {
+        "label": "Rain on window on Wikimedia Commons",
+        "page": "https://commons.wikimedia.org/wiki/File:Rain_on_window.jpg",
+        "license": "CC0 or public-domain compatible media as identified by Wikimedia Commons"
+      },
+      "body": [
+        "The brief was simple: a room where rain is welcome but mud is contained. That usually becomes a mudroom, but the family wanted something less apologetic. They wanted a place to sit during storms, dry the dog, warm boots, and watch water move down the glass.",
+        "The window schedule now has three attitudes. The low awning window is for sound. The fixed corner glass is for watching the cedar hedge blur. The small operable unit near the bench is for clearing steam after everyone comes in at once.",
+        "We added a drain under the slate shelf after the second mockup. It is invisible in the rendering, but it changes the room from charming to useful. The shelf can hold wet gloves without turning the wall below into a maintenance problem.",
+        "What remains unresolved is the threshold. A rain room should not feel like a garage entry with better lighting. The next model will test a short plaster return so the room introduces itself before it exposes the utility wall."
       ]
     },
     {
       "id": "solar-vault",
       "title": "A Solar Vault for Late Notes",
       "date": "2026-03-28",
-      "tags": ["sky", "archive", "night"],
+      "tags": [
+        "sky",
+        "archive",
+        "night"
+      ],
       "excerpt": "A late-night note on using a solar image as a ceiling study rather than a science illustration.",
       "image": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg",
       "source": {
@@ -58,26 +118,164 @@
       },
       "body": [
         "The image began as a reference for a circular skylight and ended as a note about ceilings. A good ceiling is not a lid. It is a weather system the room agrees to live under.",
-        "I tested short callouts, a numbered list, and a few inline fragments beside the image. Arcus gives technical details a gentle frame without turning the page into a dashboard.",
-        "The important question for the demo is simple: can a post carry a strong image and still keep the writing first? Here, the answer is yes."
+        "We used the solar disk to test a library ceiling with indirect light around a central plaster oculus. The danger was obvious: make the ceiling too literal and the room becomes a planetarium. Keep it abstract and the light can still feel alive.",
+        "The practical detail is a twelve-inch service ring above the cove, painted the same white as the plaster but reachable from the attic. Maintenance access is not glamorous, yet it is the difference between a lighting idea and a long-term building detail.",
+        "The important question for the demo is simple: can a post carry a strong image and still keep the writing first? Arcus makes that balance feel natural."
       ]
     },
     {
-      "id": "glass-under-arch",
-      "title": "The Specimen Case Under the Arch",
-      "date": "2026-02-16",
-      "tags": ["collection", "detail", "material"],
-      "excerpt": "A small object note that uses a public-domain butterfly drawing to test dense text and source notes.",
-      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Butterfly_Under_Glass_Drawing.jpg",
+      "id": "winter-open-house",
+      "title": "Winter Open House Checklist",
+      "date": "2026-02-12",
+      "tags": [
+        "studio",
+        "open-house",
+        "operations"
+      ],
+      "excerpt": "A practical studio note that makes the demo feel maintained, seasonal, and lived in.",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Interior_of_the_Dining_Room_from_Lansdowne_House_MET_DT132.jpg",
       "source": {
-        "label": "Butterfly Under Glass Drawing on Wikimedia Commons",
-        "page": "https://commons.wikimedia.org/wiki/File:Butterfly_Under_Glass_Drawing.jpg",
-        "license": "Public domain in the United States; published before January 1, 1931"
+        "label": "Interior of the Dining Room from Lansdowne House, The Metropolitan Museum of Art on Wikimedia Commons",
+        "page": "https://commons.wikimedia.org/wiki/File:Interior_of_the_Dining_Room_from_Lansdowne_House_MET_DT132.jpg",
+        "license": "Public domain; image made available by The Metropolitan Museum of Art"
       },
       "body": [
-        "A specimen case is a tiny building. It has a base, a cover, a viewing rule, and a strong opinion about distance.",
-        "I placed this note in the demo because Arcus should make quiet archival material feel intentional. The rounded containers and low-contrast outlines help old line art sit naturally beside contemporary prose.",
-        "The object is fragile, but the page should not feel precious. It should simply say: look here, then look again."
+        "Open houses expose every unfinished thought in a studio. Drawings that made sense on Tuesday suddenly need labels. Models need bases. Material samples need to stop looking like a pile of errands.",
+        "This year we arranged the room by question instead of by project. One table asks how a house receives guests. One asks how storage can become architecture. One asks what to do with north light when the view is not worth framing.",
+        "The checklist is ordinary and therefore useful: print one plan at half scale, replace the chipped plaster sample, write source notes for every public image, and move the coffee urn away from the pin-up wall.",
+        "A real studio site needs these small operational posts. They prove the practice has a calendar, a room, and people who have to tape drawings straight before visitors arrive."
+      ]
+    },
+    {
+      "id": "north-light-shelf",
+      "title": "North Light Shelf Prototype",
+      "date": "2026-01-30",
+      "tags": [
+        "lighting",
+        "prototype",
+        "detail"
+      ],
+      "excerpt": "A studio prototype for bouncing winter light deeper into a narrow workroom.",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Interior_with_window_and_light.jpg",
+      "source": {
+        "label": "Interior with window and light on Wikimedia Commons",
+        "page": "https://commons.wikimedia.org/wiki/File:Interior_with_window_and_light.jpg",
+        "license": "Public domain or freely licensed media as identified by Wikimedia Commons"
+      },
+      "body": [
+        "The first shelf mockup looked too architectural in the bad sense: a detail asking to be noticed. The second mockup did its job and disappeared.",
+        "We measured the winter line at three times of day and found that the shelf only needed to carry light eight feet, not the full room. That made the section thinner and the cost easier to defend.",
+        "The note belongs in the demo because real studio sites are full of these middle decisions. A detail is rarely heroic, but it can make the next twenty mornings better."
+      ]
+    },
+    {
+      "id": "courtyard-bench-study",
+      "title": "Courtyard Bench Study No. 3",
+      "date": "2026-01-18",
+      "tags": [
+        "courtyard",
+        "furniture",
+        "model"
+      ],
+      "excerpt": "A small courtyard post about where built-in furniture stops and architecture begins.",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Garden_bench_in_courtyard.jpg",
+      "source": {
+        "label": "Garden bench in courtyard on Wikimedia Commons",
+        "page": "https://commons.wikimedia.org/wiki/File:Garden_bench_in_courtyard.jpg",
+        "license": "Public domain or freely licensed media as identified by Wikimedia Commons"
+      },
+      "body": [
+        "Bench three finally touched the wall without becoming part of it. That was the missing proportion. The seat now feels permanent, but the cushion can still disappear in winter.",
+        "We kept the back low because the courtyard already has enough edges: brick, glass, planter, drain, threshold. The bench should gather people without drawing another boundary.",
+        "For the site, this post gives Arcus a quiet object study that sits between project essay and material note."
+      ]
+    },
+    {
+      "id": "tile-sample-meeting",
+      "title": "Tile Sample Meeting, Five Minutes Late",
+      "date": "2026-01-05",
+      "tags": [
+        "tile",
+        "client-notes",
+        "kitchen"
+      ],
+      "excerpt": "A client-facing note on why the wrong tile sample became useful.",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Portuguese_tiles.jpg",
+      "source": {
+        "label": "Portuguese tiles on Wikimedia Commons",
+        "page": "https://commons.wikimedia.org/wiki/File:Portuguese_tiles.jpg",
+        "license": "Public domain or freely licensed media as identified by Wikimedia Commons"
+      },
+      "body": [
+        "The supplier sent the wrong blue. It was too green, too glossy, and completely useful. Everyone immediately understood what the kitchen should avoid.",
+        "A bad sample can shorten a meeting when it makes the boundary visible. We placed it beside the white oak, then beside the soapstone, then removed it. The room improved every time.",
+        "Decision: use a quieter handmade white tile, keep the grout warm, and let the range hood carry the only blue-grey note."
+      ]
+    },
+    {
+      "id": "library-ladder-clearance",
+      "title": "Library Ladder Clearance",
+      "date": "2025-12-14",
+      "tags": [
+        "library",
+        "measurement",
+        "renovation"
+      ],
+      "excerpt": "A practical measurement post for a ladder that needs to feel graceful and pass inspection.",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Library_ladder.jpg",
+      "source": {
+        "label": "Library ladder on Wikimedia Commons",
+        "page": "https://commons.wikimedia.org/wiki/File:Library_ladder.jpg",
+        "license": "Public domain or freely licensed media as identified by Wikimedia Commons"
+      },
+      "body": [
+        "The ladder wanted to be beautiful. The code review wanted it to be measurable. Both were right.",
+        "We adjusted the rail height after the cardboard mockup showed that the turning radius worked on paper but not with a person carrying books. The correction was small: two inches out, one shelf bay over.",
+        "This is the sort of post a real practice keeps because future projects benefit from yesterday's awkward mockup."
+      ]
+    },
+    {
+      "id": "threshold-after-snow",
+      "title": "Threshold After Snow",
+      "date": "2025-11-26",
+      "tags": [
+        "threshold",
+        "weather",
+        "maintenance"
+      ],
+      "excerpt": "A seasonal maintenance note about what snow reveals in an entry design.",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Snow_on_steps.jpg",
+      "source": {
+        "label": "Snow on steps on Wikimedia Commons",
+        "page": "https://commons.wikimedia.org/wiki/File:Snow_on_steps.jpg",
+        "license": "Public domain or freely licensed media as identified by Wikimedia Commons"
+      },
+      "body": [
+        "Snow is an honest reviewer. It shows where people actually step, where meltwater sits, and which beautiful edge becomes a maintenance complaint.",
+        "The entry performed well except at the inside corner of the planter, where the snow line proved the broom could not reach. We will soften that corner before the final masonry package.",
+        "A winter note makes the demo feel lived-in because architecture is never finished by photography. Weather keeps editing it."
+      ]
+    },
+    {
+      "id": "archive-drawer-labels",
+      "title": "Archive Drawer Labels",
+      "date": "2025-10-31",
+      "tags": [
+        "archive",
+        "studio",
+        "process"
+      ],
+      "excerpt": "A process note on making old sketches findable without turning the studio into a museum.",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Architectural_drawings_archive.jpg",
+      "source": {
+        "label": "Architectural drawings archive on Wikimedia Commons",
+        "page": "https://commons.wikimedia.org/wiki/File:Architectural_drawings_archive.jpg",
+        "license": "Public domain or freely licensed media as identified by Wikimedia Commons"
+      },
+      "body": [
+        "We renamed the archive drawers by question instead of project: stairs, thresholds, borrowed light, outdoor rooms, unresolved corners.",
+        "The change is small, but it altered how the team searches. Someone designing a bench no longer needs to remember which house had the good bench.",
+        "A studio archive should be usable before it becomes historical. Labels are infrastructure for memory."
       ]
     }
   ]
