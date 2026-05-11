@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=../assets/schema/index.json
+
+loring-arch-morning:
+  en: post/loring-arch-morning/en.md
+sunrise-as-plan:
+  en: post/sunrise-as-plan/en.md
+solar-vault:
+  en: post/solar-vault/en.md
+glass-under-arch:
+  en: post/glass-under-arch/en.md

@@ -1,0 +1,14 @@
+siteTitle: "Mira Vale Studio Notes"
+siteDescription:
+  en: "A fictional architecture and light diary for showing the soft, layered Arcus theme."
+contentRoot: wwwroot
+defaultLanguage: en
+themeMode: auto
+themePack: "arcus"
+annotate:
+  enabled: false
+repo:
+  provider: github
+  owner: EkilyHQ
+  name: "Press-Theme-Arcus"
+  branch: demo
