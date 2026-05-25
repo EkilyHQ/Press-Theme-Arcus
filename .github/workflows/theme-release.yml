@@ -30,7 +30,7 @@ jobs:
       REQUESTED_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || '' }}
     steps:
       - name: Checkout theme
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -108,7 +108,7 @@ jobs:
 
       - name: Checkout Press checks
         if: steps.plan.outputs.should_release == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: EkilyHQ/Press
           path: .press
