@@ -32,10 +32,12 @@ const CLASS_HIDDEN = 'is-hidden';
 let themeI18n = null;
 let currentSiteConfig = null;
 let activeRegions = null;
+let activeThemeContext = null;
 
 function setThemeI18n(context = {}) {
   themeI18n = context && context.i18n && typeof context.i18n === 'object' ? context.i18n : null;
   activeRegions = context && context.regions && typeof context.regions === 'object' ? context.regions : null;
+  activeThemeContext = context && typeof context === 'object' ? context : null;
 }
 
 function getRegion(name, documentRef = defaultDocument) {
@@ -948,19 +950,19 @@ function populateThemePackOptions(documentRef = defaultDocument, windowRef = def
   return true;
 }
 
-function setupToolsPanel(documentRef = defaultDocument, windowRef = defaultWindow) {
+function setupToolsPanel(documentRef = defaultDocument, windowRef = defaultWindow, themeContext = activeThemeContext) {
   const panel = documentRef && documentRef.getElementById('toolsPanel');
   if (!panel) return false;
-  try { mountThemeControls({ host: panel, variant: 'arcus' }); } catch (_) {}
+  try { mountThemeControls({ host: panel, variant: 'arcus', themeContext }); } catch (_) {}
   try { applySavedTheme(); } catch (_) {}
   return true;
 }
 
-function resetToolsPanel(documentRef = defaultDocument, windowRef = defaultWindow) {
+function resetToolsPanel(documentRef = defaultDocument, windowRef = defaultWindow, themeContext = activeThemeContext) {
   const panel = documentRef && documentRef.getElementById('toolsPanel');
   if (!panel) return false;
   panel.innerHTML = '';
-  return setupToolsPanel(documentRef, windowRef);
+  return setupToolsPanel(documentRef, windowRef, themeContext);
 }
 
 function enhanceArcusTocDock(tocEl) {
@@ -1715,8 +1717,8 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     return true;
   };
 
-  hooks.setupThemeControls = () => setupToolsPanel(documentRef, windowRef);
-  hooks.resetThemeControls = () => resetToolsPanel(documentRef, windowRef);
+  hooks.setupThemeControls = () => setupToolsPanel(documentRef, windowRef, activeThemeContext);
+  hooks.resetThemeControls = () => resetToolsPanel(documentRef, windowRef, activeThemeContext);
   hooks.updateSearchPlaceholder = () => { updateSearchPlaceholder(documentRef); return true; };
 
   hooks.setupResponsiveTabsObserver = () => {
@@ -1764,7 +1766,7 @@ export function mount(context = {}) {
   const win = (context.document && context.document.defaultView) || defaultWindow;
   const effects = mountHooks(doc, win);
   updateSearchPlaceholder(doc);
-  setupToolsPanel(doc, win);
+  setupToolsPanel(doc, win, context);
   setupDynamicBackground(doc, win);
   setupBackToTop(doc, win);
   const views = {
