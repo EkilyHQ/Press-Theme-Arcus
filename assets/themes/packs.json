@@ -5,7 +5,7 @@
     "version": "3.4.1",
     "contractVersion": 2,
     "engines": {
-      "press": ">=3.4.121 <4.0.0"
+      "press": ">=3.4.122 <4.0.0"
     },
     "builtIn": true,
     "removable": false,
@@ -13,7 +13,7 @@
       "type": "builtin"
     },
     "release": {
-      "tag": "v3.4.121"
+      "tag": "v3.4.122"
     },
     "files": [
       "base.css",
@@ -33,10 +33,10 @@
   {
     "value": "arcus",
     "label": "Arcus",
-    "version": "3.4.2",
-    "contractVersion": 1,
+    "version": "3.4.3",
+    "contractVersion": 2,
     "engines": {
-      "press": ">=3.4.0 <4.0.0"
+      "press": ">=3.4.121 <4.0.0"
     },
     "builtIn": false,
     "removable": true,
@@ -46,12 +46,12 @@
       "manifestUrl": "https://raw.githubusercontent.com/EkilyHQ/Press-Theme-Arcus/main/theme-release.json"
     },
     "release": {
-      "tag": "v3.4.2",
-      "htmlUrl": "https://github.com/EkilyHQ/Press-Theme-Arcus/releases/tag/v3.4.2",
-      "publishedAt": "2026-05-11T16:53:27Z",
-      "assetName": "press-theme-arcus-v3.4.2.zip",
-      "size": 30550,
-      "digest": "sha256:9afde8ca0069b68bd633cef4a59636d0d02df59c29179b33020301384c3a18ea"
+      "tag": "v3.4.3",
+      "htmlUrl": "https://github.com/EkilyHQ/Press-Theme-Arcus/releases/tag/v3.4.3",
+      "publishedAt": "2026-06-06T15:11:16Z",
+      "assetName": "press-theme-arcus-v3.4.3.zip",
+      "size": 30613,
+      "digest": "sha256:987ed220ee6bc5a5b707efd7c77bf39419ecb5defd0c62e1e32e2f47c8c4c95b"
     },
     "files": [
       "modules/interactions.js",
