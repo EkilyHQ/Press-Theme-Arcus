@@ -27,7 +27,7 @@ export function mount(context = {}) {
     el.innerHTML = `
       <div class="arcus-header__inner">
         <div class="arcus-header__brand">
-          <a class="arcus-brand" href="?tab=posts" data-site-home>
+          <a class="arcus-brand" href="#" data-site-home>
             <div class="arcus-brand__mark arcus-brand__mark--placeholder">
               <img class="arcus-brand__logo" data-site-logo alt="" loading="lazy" decoding="async" hidden />
             </div>
@@ -180,6 +180,7 @@ export function mount(context = {}) {
   tagBand.className = 'arcus-tagband';
   tagBand.setAttribute('data-theme-region', 'tags');
   tagBand.setAttribute('aria-label', 'Tag filters');
+  tagBand.hidden = true;
 
   let footer = rightColumn.querySelector('.arcus-footer');
   if (!footer) {
