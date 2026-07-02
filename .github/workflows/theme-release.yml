@@ -115,8 +115,11 @@ jobs:
 
       - name: Validate theme contract
         if: steps.plan.outputs.should_release == 'true'
+        env:
+          PRESS_ROOT: .press
         run: |
           set -euo pipefail
+          node scripts/test-public-chrome-features.mjs
           rm -rf ".press/assets/themes/${THEME_SLUG}"
           mkdir -p ".press/assets/themes/${THEME_SLUG}"
           rsync -a ./theme/ ".press/assets/themes/${THEME_SLUG}/"
