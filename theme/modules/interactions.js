@@ -826,7 +826,7 @@ function renderNavLinks(nav, tabsBySlug, activeSlug, postsEnabled, getHomeSlug, 
   if (!nav) return;
   const items = [];
   const homeSlug = typeof getHomeSlug === 'function' ? getHomeSlug() : 'posts';
-  updateHomeLinks(nav.ownerDocument || defaultDocument, { ...params, getHomeSlug });
+  updateHomeLinks(nav.ownerDocument || defaultDocument, { ...params, getHomeSlug: () => homeSlug });
   if (postsEnabled()) {
     items.push({ slug: 'posts', label: t('ui.allPosts'), href: withLangParam('?tab=posts') });
   }
@@ -1582,6 +1582,7 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     try { if (featureEnabled(params, 'search') && typeof params.setupSearch === 'function') params.setupSearch(params.allEntries || []); } catch (_) {}
     try {
       if (featureEnabled(params, 'tags') && featureEnabled(params, 'search') && typeof params.renderTagSidebar === 'function') {
+        setChromeHidden(getTagsRegion(documentRef), false);
         params.renderTagSidebar(params.postsIndexMap || {});
       } else {
         const tags = getTagsRegion(documentRef);
@@ -1647,14 +1648,22 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
       </article>`;
 
     const tocTarget = containers && containers.tocElement ? containers.tocElement : getRoleElement('toc', documentRef);
+    const renderFallbackToc = () => {
+      if (!featureEnabled({ features }, 'toc')) {
+        clearArcusToc(tocTarget);
+        if (tocTarget) tocTarget.hidden = true;
+        return;
+      }
+      showToc(tocTarget, tocHtml, title);
+    };
     try {
       if (utilities && typeof utilities.renderPostTOC === 'function') {
         utilities.renderPostTOC({ tocElement: tocTarget, tocHtml, articleTitle: title, features });
       } else {
-        showToc(tocTarget, tocHtml, title);
+        renderFallbackToc();
       }
     } catch (_) {
-      showToc(tocTarget, tocHtml, title);
+      renderFallbackToc();
     }
 
     try { if (utilities && typeof utilities.renderPostNav === 'function') utilities.renderPostNav(main.querySelector('[data-post-nav]'), postsIndex || {}, postMetadata && postMetadata.location); } catch (_) {}

@@ -43,6 +43,11 @@ assert.match(
 );
 assert.match(
   interactions,
+  /featureEnabled\(params, 'tags'\) && featureEnabled\(params, 'search'\) && typeof params\.renderTagSidebar === 'function'\) \{[\s\S]*setChromeHidden\(getTagsRegion\(documentRef\), false\);[\s\S]*params\.renderTagSidebar/,
+  'index enhancement should unhide tags before delegating tag sidebar rendering'
+);
+assert.match(
+  interactions,
   /else \{[\s\S]*const tags = getTagsRegion\(documentRef\);[\s\S]*tags\.innerHTML = '';[\s\S]*setChromeHidden\(tags, true\);[\s\S]*\}/,
   'index enhancement should clear and hide tags when tags or search are disabled'
 );
@@ -75,6 +80,16 @@ assert.match(
   interactions,
   /utilities\.renderPostTOC\(\{ tocElement: tocTarget, tocHtml, articleTitle: title, features \}\)/,
   'post TOC utility calls should forward the feature context'
+);
+assert.match(
+  interactions,
+  /function renderNavLinks[\s\S]*const homeSlug = typeof getHomeSlug === 'function' \? getHomeSlug\(\) : 'posts';[\s\S]*updateHomeLinks\(nav\.ownerDocument \|\| defaultDocument, \{ \.\.\.params, getHomeSlug: \(\) => homeSlug \}\);/,
+  'home links should preserve the same posts fallback used by nav rendering'
+);
+assert.match(
+  interactions,
+  /const renderFallbackToc = \(\) => \{[\s\S]*if \(!featureEnabled\(\{ features \}, 'toc'\)\) \{[\s\S]*clearArcusToc\(tocTarget\);[\s\S]*tocTarget\.hidden = true;[\s\S]*return;[\s\S]*showToc\(tocTarget, tocHtml, title\);[\s\S]*\};[\s\S]*catch \(_\) \{[\s\S]*renderFallbackToc\(\);[\s\S]*\}/,
+  'post TOC fallback should respect the toc feature gate even without a utility renderer'
 );
 
 console.log('ok - Arcus public chrome feature gates');
