@@ -60,9 +60,13 @@ function setChromeHidden(element, hidden) {
 
 function updateHomeLinks(documentRef = defaultDocument, params = {}) {
   if (!documentRef || typeof documentRef.querySelectorAll !== 'function') return false;
-  const getHomeSlug = typeof params.getHomeSlug === 'function' ? params.getHomeSlug : null;
+  const windowRef = params.window || (documentRef && documentRef.defaultView) || defaultWindow;
+  const getHomeSlug = typeof params.getHomeSlug === 'function'
+    ? params.getHomeSlug
+    : (windowRef && typeof windowRef.__press_get_home_slug === 'function' ? windowRef.__press_get_home_slug : null);
   const homeSlug = getHomeSlug ? String(getHomeSlug() || '').trim() : '';
-  const href = homeSlug ? withLangParam(`?tab=${encodeURIComponent(homeSlug)}`) : '#';
+  if (!homeSlug) return false;
+  const href = withLangParam(`?tab=${encodeURIComponent(homeSlug)}`);
   documentRef.querySelectorAll('[data-site-home]').forEach((link) => {
     try { link.setAttribute('href', href); } catch (_) {}
   });

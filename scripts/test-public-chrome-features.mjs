@@ -88,8 +88,40 @@ assert.match(
 );
 assert.match(
   interactions,
+  /function updateHomeLinks[\s\S]*__press_get_home_slug[\s\S]*if \(!homeSlug\) return false;[\s\S]*const href = withLangParam\(`\?tab=\$\{encodeURIComponent\(homeSlug\)\}`\);/,
+  'identity refresh should use the runtime home helper or preserve existing home hrefs'
+);
+assert.match(
+  interactions,
   /const renderFallbackToc = \(\) => \{[\s\S]*if \(!featureEnabled\(\{ features \}, 'toc'\)\) \{[\s\S]*clearArcusToc\(tocTarget\);[\s\S]*tocTarget\.hidden = true;[\s\S]*return;[\s\S]*showToc\(tocTarget, tocHtml, title\);[\s\S]*\};[\s\S]*catch \(_\) \{[\s\S]*renderFallbackToc\(\);[\s\S]*\}/,
   'post TOC fallback should respect the toc feature gate even without a utility renderer'
 );
+
+const updateHomeLinksSource = interactions.slice(
+  interactions.indexOf('function updateHomeLinks'),
+  interactions.indexOf('\n\nfunction getRegion')
+);
+assert.ok(updateHomeLinksSource.includes('function updateHomeLinks'), 'updateHomeLinks source should be available for behavior probe');
+const updateHomeLinks = new Function(
+  'defaultWindow',
+  'withLangParam',
+  `${updateHomeLinksSource}; return updateHomeLinks;`
+)(undefined, (href) => href);
+const homeLink = {
+  href: '?tab=about',
+  setAttribute(name, value) {
+    if (name === 'href') this.href = value;
+  }
+};
+const fakeDocument = {
+  defaultView: {},
+  querySelectorAll(selector) {
+    return selector === '[data-site-home]' ? [homeLink] : [];
+  }
+};
+assert.equal(updateHomeLinks(fakeDocument, {}), false, 'identity refresh without home helper should not rewrite home links');
+assert.equal(homeLink.href, '?tab=about', 'identity refresh without home helper should preserve existing home href');
+assert.equal(updateHomeLinks(fakeDocument, { window: { __press_get_home_slug: () => 'landing' } }), true, 'runtime home helper should update home links');
+assert.equal(homeLink.href, '?tab=landing', 'runtime home helper should write the resolved home href');
 
 console.log('ok - Arcus public chrome feature gates');
