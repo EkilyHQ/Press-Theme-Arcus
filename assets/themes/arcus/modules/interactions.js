@@ -23,6 +23,7 @@ import { renderPostMetaCard, renderOutdatedCard } from '../../../js/templates.js
 import { attachHoverTooltip, renderTagSidebar as renderDefaultTags } from '../../../js/tags.js';
 import { prefersReducedMotion } from '../../../js/dom-utils.js';
 import { renderPressPostCardHtml } from '../../../js/post-card-html.js';
+import { siteFeatureContextEnabled } from '../../../js/site-features.js';
 
 const defaultWindow = typeof window !== 'undefined' ? window : undefined;
 const defaultDocument = typeof document !== 'undefined' ? document : undefined;
@@ -38,6 +39,38 @@ function setThemeI18n(context = {}) {
   themeI18n = context && context.i18n && typeof context.i18n === 'object' ? context.i18n : null;
   activeRegions = context && context.regions && typeof context.regions === 'object' ? context.regions : null;
   activeThemeContext = context && typeof context === 'object' ? context : null;
+}
+
+function featureEnabled(params = {}, key) {
+  const features = (params && params.features)
+    || (params && params.ctx && params.ctx.features)
+    || (params && params.context && params.context.features)
+    || (activeThemeContext && activeThemeContext.features);
+  return siteFeatureContextEnabled(features, key);
+}
+
+function setChromeHidden(element, hidden) {
+  if (!element) return;
+  try { element.hidden = !!hidden; } catch (_) {}
+  try {
+    if (hidden) element.setAttribute('aria-hidden', 'true');
+    else element.removeAttribute('aria-hidden');
+  } catch (_) {}
+}
+
+function updateHomeLinks(documentRef = defaultDocument, params = {}) {
+  if (!documentRef || typeof documentRef.querySelectorAll !== 'function') return false;
+  const windowRef = params.window || (documentRef && documentRef.defaultView) || defaultWindow;
+  const getHomeSlug = typeof params.getHomeSlug === 'function'
+    ? params.getHomeSlug
+    : (windowRef && typeof windowRef.__press_get_home_slug === 'function' ? windowRef.__press_get_home_slug : null);
+  const homeSlug = getHomeSlug ? String(getHomeSlug() || '').trim() : '';
+  if (!homeSlug) return false;
+  const href = withLangParam(`?tab=${encodeURIComponent(homeSlug)}`);
+  documentRef.querySelectorAll('[data-site-home]').forEach((link) => {
+    try { link.setAttribute('href', href); } catch (_) {}
+  });
+  return true;
 }
 
 function getRegion(name, documentRef = defaultDocument) {
@@ -544,10 +577,11 @@ function fadeOut(element, onDone) {
   }
 }
 
-function buildCard({ title, meta, translate, link, siteConfig }) {
+function buildCard({ title, meta, translate, link, siteConfig, features }) {
   const excerpt = meta && meta.excerpt ? String(meta.excerpt) : '';
-  const date = meta && meta.date ? formatDisplayDate(meta.date) : '';
-  const tags = meta ? renderTags(meta.tag) : '';
+  const showPostMeta = featureEnabled({ features }, 'postMeta');
+  const date = showPostMeta && meta && meta.date ? formatDisplayDate(meta.date) : '';
+  const tags = featureEnabled({ features }, 'tags') && meta ? renderTags(meta.tag) : '';
   const coverHtml = renderCardCover(meta, title, siteConfig);
   return renderPressPostCardHtml({
     title: String(title || 'Untitled'),
@@ -792,10 +826,11 @@ function observeNavOverflow(nav, windowRef = defaultWindow) {
   };
 }
 
-function renderNavLinks(nav, tabsBySlug, activeSlug, postsEnabled, getHomeSlug) {
+function renderNavLinks(nav, tabsBySlug, activeSlug, postsEnabled, getHomeSlug, params = {}) {
   if (!nav) return;
   const items = [];
   const homeSlug = typeof getHomeSlug === 'function' ? getHomeSlug() : 'posts';
+  updateHomeLinks(nav.ownerDocument || defaultDocument, { ...params, getHomeSlug: () => homeSlug });
   if (postsEnabled()) {
     items.push({ slug: 'posts', label: t('ui.allPosts'), href: withLangParam('?tab=posts') });
   }
@@ -808,22 +843,39 @@ function renderNavLinks(nav, tabsBySlug, activeSlug, postsEnabled, getHomeSlug) 
   observeNavOverflow(nav);
 }
 
-function renderFooterLinks(root, tabsBySlug, postsEnabled, getHomeSlug, getHomeLabel) {
+function renderFooterLinks(root, tabsBySlug, postsEnabled, getHomeSlug, getHomeLabel, params = {}) {
   if (!root) return;
+  const host = root.closest ? root.closest('.arcus-footer__nav') || root : root;
+  if (!featureEnabled(params, 'footerNav')) {
+    root.innerHTML = '';
+    setChromeHidden(root, true);
+    setChromeHidden(host, true);
+    return;
+  }
+  setChromeHidden(root, false);
+  setChromeHidden(host, false);
   const links = [];
   const homeSlug = getHomeSlug();
   const homeLabel = getHomeLabel();
-  links.push({ href: withLangParam(`?tab=${encodeURIComponent(homeSlug)}`), label: homeLabel });
+  if (homeSlug) links.push({ href: withLangParam(`?tab=${encodeURIComponent(homeSlug)}`), label: homeLabel });
   Object.entries(tabsBySlug || {}).forEach(([slug, info]) => {
+    if (slug === homeSlug) return;
     const label = info && info.title ? String(info.title) : slug;
     links.push({ href: withLangParam(`?tab=${encodeURIComponent(slug)}`), label });
   });
-  links.push({ href: withLangParam('?tab=search'), label: t('ui.searchTab') });
+  if (featureEnabled(params, 'search')) links.push({ href: withLangParam('?tab=search'), label: t('ui.searchTab') });
   root.innerHTML = `<ul class="arcus-footer__list">${links.map(link => `<li><a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a></li>`).join('')}</ul>`;
 }
 
-function renderLinksList(root, cfg) {
+function renderLinksList(root, cfg, params = {}) {
   if (!root) return;
+  const host = root.closest ? root.closest('.arcus-utility__links') : null;
+  if (!featureEnabled(params, 'profileLinks')) {
+    root.innerHTML = '';
+    setChromeHidden(host || root, true);
+    return;
+  }
+  setChromeHidden(host || root, false);
   const list = Array.isArray(cfg && cfg.profileLinks) ? cfg.profileLinks : [];
   if (!list.length) {
     root.innerHTML = `<li class="arcus-linklist__empty">${t('editor.site.noLinks')}</li>`;
@@ -838,8 +890,19 @@ function renderLinksList(root, cfg) {
   }).join('');
 }
 
-function updateSearchPlaceholder(documentRef = defaultDocument) {
-  const search = documentRef ? documentRef.querySelector('press-search') : null;
+function updateSearchPlaceholder(documentRef = defaultDocument, params = {}) {
+  const search = documentRef ? getSearchRegion(documentRef) : null;
+  const toggle = documentRef ? documentRef.querySelector('.arcus-search-toggle') : null;
+  const toggleHost = documentRef ? documentRef.querySelector('.arcus-main__search-toggle') : null;
+  if (!featureEnabled(params, 'search')) {
+    setChromeHidden(search, true);
+    setChromeHidden(toggle, true);
+    setChromeHidden(toggleHost, true);
+    return;
+  }
+  setChromeHidden(search, false);
+  setChromeHidden(toggle, false);
+  setChromeHidden(toggleHost, false);
   if (search && typeof search.setPlaceholder === 'function') {
     search.setPlaceholder(t('sidebar.searchPlaceholder'));
     return;
@@ -953,6 +1016,15 @@ function populateThemePackOptions(documentRef = defaultDocument, windowRef = def
 function setupToolsPanel(documentRef = defaultDocument, windowRef = defaultWindow, themeContext = activeThemeContext) {
   const panel = documentRef && documentRef.getElementById('toolsPanel');
   if (!panel) return false;
+  const host = panel.closest ? panel.closest('.arcus-utility__tools') || panel : panel;
+  if (!featureEnabled({ context: themeContext }, 'visitorThemeControls')) {
+    panel.innerHTML = '';
+    setChromeHidden(panel, true);
+    setChromeHidden(host, true);
+    return true;
+  }
+  setChromeHidden(panel, false);
+  setChromeHidden(host, false);
   try { mountThemeControls({ host: panel, variant: 'arcus', themeContext }); } catch (_) {}
   try { applySavedTheme(); } catch (_) {}
   return true;
@@ -1391,8 +1463,9 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
   hooks.showElement = ({ element }) => fadeIn(element);
   hooks.hideElement = ({ element, onDone }) => { fadeOut(element, onDone); return true; };
 
-  hooks.renderSiteIdentity = ({ config }) => {
+  hooks.renderSiteIdentity = ({ config, getHomeSlug, features }) => {
     currentSiteConfig = config || currentSiteConfig;
+    updateHomeLinks(documentRef, { getHomeSlug, features });
     const title = localized(config, 'siteTitle');
     const subtitle = localized(config, 'siteSubtitle');
     const titleEl = documentRef.querySelector('[data-site-title]');
@@ -1428,9 +1501,9 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     }
   };
 
-  hooks.renderSiteLinks = ({ config }) => {
+  hooks.renderSiteLinks = ({ config, features }) => {
     const root = documentRef.querySelector('[data-site-links]');
-    renderLinksList(root, config);
+    renderLinksList(root, config, { features });
   };
 
   hooks.updateLayoutLoadingState = ({ isLoading, containerElement }) => {
@@ -1439,8 +1512,13 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     target.classList.toggle('is-loading', !!isLoading);
   };
 
-  hooks.renderPostTOC = ({ tocElement, tocHtml, articleTitle }) => {
+  hooks.renderPostTOC = ({ tocElement, tocHtml, articleTitle, features }) => {
     const toc = tocElement || getRoleElement('toc', documentRef);
+    if (!featureEnabled({ features }, 'toc')) {
+      clearArcusToc(toc);
+      if (toc) toc.hidden = true;
+      return true;
+    }
     showToc(toc, tocHtml, articleTitle);
     return true;
   };
@@ -1461,7 +1539,7 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     return true;
   };
 
-  hooks.handleViewChange = ({ view }) => {
+  hooks.handleViewChange = ({ view, features }) => {
     if (!documentRef || !documentRef.body) return;
     documentRef.body.setAttribute('data-active-view', view || 'posts');
     const toc = getRoleElement('toc', documentRef);
@@ -1470,13 +1548,30 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
       toc.hidden = true;
     }
     const search = documentRef.querySelector('press-search');
+    if (!featureEnabled({ features }, 'search')) setChromeHidden(search, true);
+    if (!featureEnabled({ features }, 'tags') || !featureEnabled({ features }, 'search')) {
+      const tags = getTagsRegion(documentRef);
+      if (tags) {
+        tags.innerHTML = '';
+        setChromeHidden(tags, true);
+      }
+    }
     const value = view === 'search' ? (getQueryVariable('q') || '') : '';
     if (search) search.value = value;
     const input = search && search.input ? search.input : getSearchInput(documentRef);
     if (input) input.value = value;
   };
 
-  hooks.renderTagSidebar = ({ postsIndex, utilities }) => {
+  hooks.renderTagSidebar = ({ postsIndex, utilities, features }) => {
+    if (!featureEnabled({ features }, 'tags') || !featureEnabled({ features }, 'search')) {
+      const tags = getTagsRegion(documentRef);
+      if (tags) {
+        tags.innerHTML = '';
+        setChromeHidden(tags, true);
+      }
+      return true;
+    }
+    setChromeHidden(getTagsRegion(documentRef), false);
     const render = utilities && typeof utilities.renderTagSidebar === 'function'
       ? utilities.renderTagSidebar
       : renderDefaultTags;
@@ -1488,22 +1583,33 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     const container = params.containerElement || getRoleElement('main', documentRef);
     try { if (typeof hydrateCardCovers === 'function') hydrateCardCovers(container); } catch (_) {}
     try { if (typeof applyLazyLoadingIn === 'function') applyLazyLoadingIn(container); } catch (_) {}
-    try { if (typeof params.setupSearch === 'function') params.setupSearch(params.allEntries || []); } catch (_) {}
-    try { if (typeof params.renderTagSidebar === 'function') params.renderTagSidebar(params.postsIndexMap || {}); } catch (_) {}
+    try { if (featureEnabled(params, 'search') && typeof params.setupSearch === 'function') params.setupSearch(params.allEntries || []); } catch (_) {}
+    try {
+      if (featureEnabled(params, 'tags') && featureEnabled(params, 'search') && typeof params.renderTagSidebar === 'function') {
+        setChromeHidden(getTagsRegion(documentRef), false);
+        params.renderTagSidebar(params.postsIndexMap || {});
+      } else {
+        const tags = getTagsRegion(documentRef);
+        if (tags) {
+          tags.innerHTML = '';
+          setChromeHidden(tags, true);
+        }
+      }
+    } catch (_) {}
     return true;
   };
 
-  hooks.renderTabs = ({ tabsBySlug, activeSlug, getHomeSlug, postsEnabled }) => {
+  hooks.renderTabs = ({ tabsBySlug, activeSlug, getHomeSlug, postsEnabled, features }) => {
     const nav = getNavRegion(documentRef);
     if (!nav) return false;
-    renderNavLinks(nav, tabsBySlug, activeSlug, postsEnabled, getHomeSlug);
+    renderNavLinks(nav, tabsBySlug, activeSlug, postsEnabled, getHomeSlug, { features });
     return true;
   };
 
-  hooks.renderFooterNav = ({ tabsBySlug, postsEnabled, getHomeSlug, getHomeLabel }) => {
+  hooks.renderFooterNav = ({ tabsBySlug, postsEnabled, getHomeSlug, getHomeLabel, features }) => {
     const footerNav = documentRef.getElementById('footerNav');
     if (!footerNav) return false;
-    renderFooterLinks(footerNav, tabsBySlug, postsEnabled, getHomeSlug, getHomeLabel);
+    renderFooterLinks(footerNav, tabsBySlug, postsEnabled, getHomeSlug, getHomeLabel, { features });
     return true;
   };
 
@@ -1513,22 +1619,24 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     return true;
   };
 
-  hooks.renderPostView = ({ containers, markdownHtml, fallbackTitle, postMetadata, markdown, postsIndex, postId, siteConfig, translate, utilities, tocHtml }) => {
+  hooks.renderPostView = ({ containers, markdownHtml, fallbackTitle, postMetadata, markdown, postsIndex, postId, siteConfig, translate, utilities, tocHtml, features }) => {
     const main = containers && containers.mainElement ? containers.mainElement : getRoleElement('main', documentRef);
     if (!main) return;
     const title = (postMetadata && postMetadata.title) || fallbackTitle || '';
     const hero = renderHeroImage(postMetadata, title, siteConfig);
-    const date = postMetadata && postMetadata.date ? formatDisplayDate(postMetadata.date) : '';
-    const tagMarkup = postMetadata ? renderTags(postMetadata.tag) : '';
-    const metaCard = renderPostMetaCard(title, postMetadata || {}, markdown);
-    const outdatedCard = renderOutdatedCard(postMetadata || {}, siteConfig);
+    const showPostMeta = featureEnabled({ features }, 'postMeta');
+    const date = showPostMeta && postMetadata && postMetadata.date ? formatDisplayDate(postMetadata.date) : '';
+    const showTags = featureEnabled({ features }, 'tags');
+    const tagMarkup = showTags && postMetadata ? renderTags(postMetadata.tag) : '';
+    const metaCard = showPostMeta ? renderPostMetaCard(title, postMetadata || {}, markdown, { showTags }) : '';
+    const outdatedCard = showPostMeta ? renderOutdatedCard(postMetadata || {}, siteConfig) : '';
 
     main.innerHTML = `
       <article class="arcus-article" data-post-id="${escapeHtml(postId || '')}">
         <header class="arcus-article__header">
           ${hero || ''}
           <div class="arcus-article__heading">
-            <p class="arcus-article__meta-line">${date ? escapeHtml(date) : ''}</p>
+            ${date ? `<p class="arcus-article__meta-line">${escapeHtml(date)}</p>` : ''}
             <h1 class="arcus-article__title">${escapeHtml(title)}</h1>
             ${tagMarkup ? `<div class="arcus-article__tags">${tagMarkup}</div>` : ''}
           </div>
@@ -1544,14 +1652,22 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
       </article>`;
 
     const tocTarget = containers && containers.tocElement ? containers.tocElement : getRoleElement('toc', documentRef);
+    const renderFallbackToc = () => {
+      if (!featureEnabled({ features }, 'toc')) {
+        clearArcusToc(tocTarget);
+        if (tocTarget) tocTarget.hidden = true;
+        return;
+      }
+      showToc(tocTarget, tocHtml, title);
+    };
     try {
       if (utilities && typeof utilities.renderPostTOC === 'function') {
-        utilities.renderPostTOC({ tocElement: tocTarget, tocHtml, articleTitle: title });
+        utilities.renderPostTOC({ tocElement: tocTarget, tocHtml, articleTitle: title, features });
       } else {
-        showToc(tocTarget, tocHtml, title);
+        renderFallbackToc();
       }
     } catch (_) {
-      showToc(tocTarget, tocHtml, title);
+      renderFallbackToc();
     }
 
     try { if (utilities && typeof utilities.renderPostNav === 'function') utilities.renderPostNav(main.querySelector('[data-post-nav]'), postsIndex || {}, postMetadata && postMetadata.location); } catch (_) {}
@@ -1575,12 +1691,12 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     } catch (_) { return false; }
   };
 
-  hooks.renderIndexView = ({ container, pageEntries, page, totalPages, siteConfig }) => {
+  hooks.renderIndexView = ({ container, pageEntries, page, totalPages, siteConfig, features }) => {
     if (!container) container = getRoleElement('main', documentRef);
     if (!container) return false;
     const cards = (pageEntries || []).map(([title, meta]) => {
       const href = meta && meta.location ? withLangParam(`?id=${encodeURIComponent(meta.location)}`) : '#';
-      return buildCard({ title, meta, translate: t, link: href, siteConfig });
+      return buildCard({ title, meta, translate: t, link: href, siteConfig, features });
     }).join('');
     const baseHref = withLangParam('?tab=posts');
     container.innerHTML = `<div class="arcus-index index">
@@ -1603,12 +1719,12 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     return true;
   };
 
-  hooks.renderSearchResults = ({ container, entries, query, totalPages, page, siteConfig, tagFilter }) => {
+  hooks.renderSearchResults = ({ container, entries, query, totalPages, page, siteConfig, tagFilter, features }) => {
     if (!container) container = getRoleElement('main', documentRef);
     if (!container) return false;
     const cards = (entries || []).map(([title, meta]) => {
       const href = meta && meta.location ? withLangParam(`?id=${encodeURIComponent(meta.location)}`) : '#';
-      return buildCard({ title, meta, translate: t, link: href, siteConfig });
+      return buildCard({ title, meta, translate: t, link: href, siteConfig, features });
     }).join('');
     const baseHref = withLangParam('?tab=search');
     const summary = query
@@ -1656,7 +1772,8 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     locationAliasMap,
     postsByLocationTitle,
     postsIndex,
-    siteConfig
+    siteConfig,
+    features
   }) => {
     const main = containers && containers.mainElement ? containers.mainElement : getRoleElement('main', documentRef);
     if (!main) return false;
@@ -1689,7 +1806,10 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
 
     const toc = containers && containers.tocElement ? containers.tocElement : getRoleElement('toc', documentRef);
     if (toc) {
-      if (tocHtml) {
+      if (!featureEnabled({ features }, 'toc')) {
+        clearArcusToc(toc);
+        toc.hidden = true;
+      } else if (tocHtml) {
         showToc(toc, tocHtml, heading);
       } else {
         clearArcusToc(toc);
@@ -1719,7 +1839,7 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
 
   hooks.setupThemeControls = () => setupToolsPanel(documentRef, windowRef, activeThemeContext);
   hooks.resetThemeControls = () => resetToolsPanel(documentRef, windowRef, activeThemeContext);
-  hooks.updateSearchPlaceholder = () => { updateSearchPlaceholder(documentRef); return true; };
+  hooks.updateSearchPlaceholder = (params = {}) => { updateSearchPlaceholder(documentRef, params); return true; };
 
   hooks.setupResponsiveTabsObserver = () => {
     const header = documentRef.querySelector('.arcus-header');
@@ -1765,7 +1885,7 @@ export function mount(context = {}) {
   const doc = context.document || defaultDocument;
   const win = (context.document && context.document.defaultView) || defaultWindow;
   const effects = mountHooks(doc, win);
-  updateSearchPlaceholder(doc);
+  updateSearchPlaceholder(doc, { context });
   setupToolsPanel(doc, win, context);
   setupDynamicBackground(doc, win);
   setupBackToTop(doc, win);
