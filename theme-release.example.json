@@ -5,6 +5,9 @@
   "label": "Arcus",
   "version": "3.4.5",
   "contractVersion": 3,
+  "engines": {
+    "press": ">=3.4.127 <4.0.0"
+  },
   "release": {
     "tag": "v3.4.5",
     "htmlUrl": "https://github.com/EkilyHQ/Press-Theme-Arcus/releases/tag/v3.4.5",
