@@ -29,6 +29,7 @@ assert.equal(releaseExample.contractVersion, 4);
 assert.equal(releaseExample.engines.press, '>=3.4.130 <4.0.0');
 assert.doesNotMatch(source, /[?&](?:tab|id)=/, 'v4 packaged source should use router href helpers for public routes');
 assert.doesNotMatch(source, /getRouteHref[\s\S]{0,160}\|\|\s*'#'/, 'v4 route helper null results should not become hash dead links');
+assert.doesNotMatch(layout, /<a[^>]*href="#"[^>]*data-site-home|<a[^>]*data-site-home[^>]*href="#"/, 'brand home link should not start as a hash dead link');
 assert.match(layout, /data-site-home/);
 assert.match(interactions, /siteFeatureContextEnabled/);
 assert.match(interactions, /function getRouter[\s\S]*ctx\.router/);
@@ -113,8 +114,8 @@ assert.match(
 );
 assert.match(
   interactions,
-  /function updateHomeLinks[\s\S]*getRouteHref\(params, 'getHomeHref'\)[\s\S]*if \(!href\) return false;[\s\S]*data-site-home/,
-  'identity refresh should use the v4 home href helper or preserve existing home hrefs'
+  /function updateHomeLinks[\s\S]*getRouteHref\(params, 'getHomeHref'\)[\s\S]*setHomeLinkHref\(link, href\)/,
+  'identity refresh should use the v4 home href helper and disable home links when no href is available'
 );
 assert.match(
   interactions,
@@ -123,7 +124,7 @@ assert.match(
 );
 
 const updateHomeLinksSource = interactions.slice(
-  interactions.indexOf('function updateHomeLinks'),
+  interactions.indexOf('function setHomeLinkHref'),
   interactions.indexOf('\n\nfunction getRegion')
 );
 const routerHelpersSource = interactions.slice(
@@ -138,9 +139,17 @@ const updateHomeLinks = new Function(
   `const activeThemeContext = null; ${routerHelpersSource}\n${updateHomeLinksSource}; return updateHomeLinks;`
 )(undefined, (href) => href);
 const homeLink = {
-  href: '?tab=about',
+  attributes: new Map([['href', '?tab=about']]),
   setAttribute(name, value) {
+    this.attributes.set(String(name), String(value));
     if (name === 'href') this.href = value;
+  },
+  removeAttribute(name) {
+    this.attributes.delete(String(name));
+    if (name === 'href') delete this.href;
+  },
+  getAttribute(name) {
+    return this.attributes.has(String(name)) ? this.attributes.get(String(name)) : null;
   }
 };
 const fakeDocument = {
@@ -149,10 +158,16 @@ const fakeDocument = {
     return selector === '[data-site-home]' ? [homeLink] : [];
   }
 };
-assert.equal(updateHomeLinks(fakeDocument, {}), false, 'identity refresh without home helper should not rewrite home links');
-assert.equal(homeLink.href, '?tab=about', 'identity refresh without home helper should preserve existing home href');
+assert.equal(updateHomeLinks(fakeDocument, {}), false, 'identity refresh without home helper should not create a home href');
+assert.equal(homeLink.getAttribute('href'), null, 'identity refresh without home helper should remove stale home hrefs');
+assert.equal(homeLink.getAttribute('aria-disabled'), 'true', 'identity refresh without home helper should disable home links');
+assert.equal(homeLink.getAttribute('tabindex'), '-1', 'identity refresh without home helper should remove home links from tab order');
 assert.equal(updateHomeLinks(fakeDocument, { ctx: { router: { getHomeHref: () => '?tab=product&lang=en' } } }), true, 'ctx.router home href helper should update home links');
-assert.equal(homeLink.href, '?tab=product&lang=en', 'ctx.router withLangParam should write the resolved home href');
+assert.equal(homeLink.getAttribute('href'), '?tab=product&lang=en', 'ctx.router withLangParam should write the resolved home href');
+assert.equal(homeLink.getAttribute('aria-disabled'), null, 'valid home helper should clear disabled state');
+assert.equal(homeLink.getAttribute('tabindex'), null, 'valid home helper should restore normal focus behavior');
+assert.equal(updateHomeLinks(fakeDocument, { ctx: { router: { getHomeHref: () => null } } }), false, 'null home helper should disable home links');
+assert.equal(homeLink.getAttribute('href'), null, 'null home helper should remove stale home hrefs');
 
 class TestElement {
   constructor(tagName = 'div', ownerDocument = null) {
