@@ -13,7 +13,8 @@ function resolvePressRoot() {
   candidates.push(resolve(root, '.press'));
   candidates.push(resolve(root, '..', 'Press'));
   const found = candidates.find((candidate) => existsSync(resolve(candidate, 'assets/js/site-features.js')));
-  return found || candidates[0];
+  if (found) return found;
+  throw new Error(`Press checkout not found for behavior probes. Set PRESS_ROOT or place Press at ../Press. Checked: ${candidates.join(', ')}`);
 }
 const pressRoot = resolvePressRoot();
 
@@ -36,6 +37,7 @@ assert.match(interactions, /function getRouter[\s\S]*ctx\.router/);
 assert.match(interactions, /function getRouteHref[\s\S]*routerFunction\(params, name\)/);
 assert.match(interactions, /function updateHomeLinks[\s\S]*getRouteHref\(params, 'getHomeHref'\)[\s\S]*data-site-home/);
 assert.match(interactions, /getRouteHref\(params, 'getSearchHref'\)/, 'footer search links should use the v4 router search href helper');
+assert.doesNotMatch(interactions, /renderDefaultTags/);
 
 [
   'visitorThemeControls',
@@ -81,6 +83,11 @@ assert.match(
   interactions,
   /function buildPagination\([\s\S]*renderPageControl[\s\S]*<span class="\$\{`\$\{className\} is-disabled`\.trim\(\)\}" aria-disabled="true">/,
   'pagination should render disabled spans rather than hash links when route helpers return null'
+);
+assert.match(
+  interactions,
+  /hydrateArcusCardExcerpts\(filterEntriesWithPostHref\(params\.entries \|\| \[\], params\),/,
+  'excerpt hydration should use the same route-helper reachability as rendered cards'
 );
 assert.match(
   interactions,
