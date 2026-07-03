@@ -10,11 +10,20 @@ const read = (path) => readFileSync(resolve(root, path), 'utf8');
 const layout = read('theme/modules/layout.js');
 const interactions = read('theme/modules/interactions.js');
 const source = `${layout}\n${interactions}`;
+const manifest = JSON.parse(read('theme/theme.json'));
+const releaseExample = JSON.parse(read('theme-release.example.json'));
 
+assert.equal(manifest.contractVersion, 3);
+assert.equal(manifest.engines.press, '>=3.4.127 <4.0.0');
+assert.equal(releaseExample.contractVersion, 3);
+assert.equal(releaseExample.engines.press, '>=3.4.127 <4.0.0');
 assert.doesNotMatch(source, /href\s*=\s*["']\?tab=posts["']/);
 assert.match(layout, /data-site-home/);
 assert.match(interactions, /siteFeatureContextEnabled/);
+assert.match(interactions, /function getRouter[\s\S]*ctx\.router/);
+assert.match(interactions, /function makeRuntimeHref[\s\S]*routerFunction\(params, 'withLangParam'\)/);
 assert.match(interactions, /function updateHomeLinks[\s\S]*getHomeSlug[\s\S]*data-site-home/);
+assert.match(interactions, /routerFunction\(params, 'searchEnabled'\)/, 'footer search links should use the v3 router search helper');
 
 [
   'visitorThemeControls',
@@ -53,8 +62,8 @@ assert.match(
 );
 assert.match(
   interactions,
-  /function buildCard\(\{ title, meta, translate, link, siteConfig, features \}\)[\s\S]*featureEnabled\(\{ features \}, 'tags'\) && meta \? renderTags\(meta\.tag\) : ''/,
-  'index/search cards should hide tags when tags are disabled'
+  /function buildCard\(\{ title, meta, translate, link, siteConfig, features \}\)[\s\S]*const showTags = featureEnabled\(\{ features \}, 'tags'\) && featureEnabled\(\{ features \}, 'search'\);[\s\S]*const tags = showTags && meta \? renderTags\(meta\.tag\) : ''/,
+  'index/search cards should hide tags when tags or search are disabled'
 );
 assert.match(
   interactions,
@@ -68,8 +77,8 @@ assert.match(
 );
 assert.match(
   interactions,
-  /const showTags = featureEnabled\(\{ features \}, 'tags'\);[\s\S]*renderPostMetaCard\(title, postMetadata \|\| \{\}, markdown, \{ showTags \}\)/,
-  'shared post meta card should receive the tags feature gate'
+  /const showTags = featureEnabled\(\{ features \}, 'tags'\) && featureEnabled\(\{ features \}, 'search'\);[\s\S]*renderPostMetaCard\(title, postMetadata \|\| \{\}, markdown, \{ showTags \}\)/,
+  'shared post meta card should receive the tags and search feature gates'
 );
 assert.match(
   interactions,
@@ -83,13 +92,13 @@ assert.match(
 );
 assert.match(
   interactions,
-  /function renderNavLinks[\s\S]*const homeSlug = typeof getHomeSlug === 'function' \? getHomeSlug\(\) : 'posts';[\s\S]*updateHomeLinks\(nav\.ownerDocument \|\| defaultDocument, \{ \.\.\.params, getHomeSlug: \(\) => homeSlug \}\);/,
-  'home links should preserve the same posts fallback used by nav rendering'
+  /function renderNavLinks[\s\S]*routerFunction\(params, 'getHomeSlug'\)[\s\S]*routerFunction\(params, 'postsEnabled'\)[\s\S]*updateHomeLinks\(nav\.ownerDocument \|\| defaultDocument, \{ \.\.\.params, getHomeSlug: \(\) => homeSlug \}\);/,
+  'nav rendering should prefer ctx.router home/posts helpers before updating home links'
 );
 assert.match(
   interactions,
-  /function updateHomeLinks[\s\S]*__press_get_home_slug[\s\S]*if \(!homeSlug\) return false;[\s\S]*const href = withLangParam\(`\?tab=\$\{encodeURIComponent\(homeSlug\)\}`\);/,
-  'identity refresh should use the runtime home helper or preserve existing home hrefs'
+  /function updateHomeLinks[\s\S]*routerFunction\(params, 'getHomeSlug'\)[\s\S]*__press_get_home_slug[\s\S]*if \(!homeSlug\) return false;[\s\S]*makeRuntimeHref\(params, `\?tab=\$\{encodeURIComponent\(homeSlug\)\}`\);/,
+  'identity refresh should prefer ctx.router home helpers or preserve existing home hrefs'
 );
 assert.match(
   interactions,
@@ -101,11 +110,16 @@ const updateHomeLinksSource = interactions.slice(
   interactions.indexOf('function updateHomeLinks'),
   interactions.indexOf('\n\nfunction getRegion')
 );
+const routerHelpersSource = interactions.slice(
+  interactions.indexOf('function getRouter'),
+  interactions.indexOf('\n\nfunction setChromeHidden')
+);
 assert.ok(updateHomeLinksSource.includes('function updateHomeLinks'), 'updateHomeLinks source should be available for behavior probe');
+assert.ok(routerHelpersSource.includes('function routerFunction'), 'router helper source should be available for behavior probe');
 const updateHomeLinks = new Function(
   'defaultWindow',
   'withLangParam',
-  `${updateHomeLinksSource}; return updateHomeLinks;`
+  `const activeThemeContext = null; ${routerHelpersSource}\n${updateHomeLinksSource}; return updateHomeLinks;`
 )(undefined, (href) => href);
 const homeLink = {
   href: '?tab=about',
@@ -121,6 +135,8 @@ const fakeDocument = {
 };
 assert.equal(updateHomeLinks(fakeDocument, {}), false, 'identity refresh without home helper should not rewrite home links');
 assert.equal(homeLink.href, '?tab=about', 'identity refresh without home helper should preserve existing home href');
+assert.equal(updateHomeLinks(fakeDocument, { ctx: { router: { getHomeSlug: () => 'product', withLangParam: (href) => `${href}&lang=en` } } }), true, 'ctx.router home helper should update home links');
+assert.equal(homeLink.href, '?tab=product&lang=en', 'ctx.router withLangParam should write the resolved home href');
 assert.equal(updateHomeLinks(fakeDocument, { window: { __press_get_home_slug: () => 'landing' } }), true, 'runtime home helper should update home links');
 assert.equal(homeLink.href, '?tab=landing', 'runtime home helper should write the resolved home href');
 
