@@ -4,7 +4,7 @@ Use this layout for one official theme repository, such as `EkilyHQ/Press-Theme-
 
 ## Required Files
 
-- `theme/theme.json` - Press theme manifest with `contractVersion: 3`.
+- `theme/theme.json` - Press theme manifest with `contractVersion: 4`.
 - `theme/theme.css` and `theme/modules/**` - theme runtime files.
 - `theme-release.json` - latest release manifest consumed by Press Theme Manager.
 - `.github/workflows/theme-release.yml` - release workflow for ZIP, digest, GitHub Release, and manifest update.

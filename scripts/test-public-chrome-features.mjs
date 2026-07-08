@@ -1,11 +1,22 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, symlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
 const read = (path) => readFileSync(resolve(root, path), 'utf8');
+function resolvePressRoot() {
+  const candidates = [];
+  if (process.env.PRESS_ROOT) candidates.push(resolve(root, process.env.PRESS_ROOT));
+  candidates.push(resolve(root, '.press'));
+  candidates.push(resolve(root, '..', 'Press'));
+  const found = candidates.find((candidate) => existsSync(resolve(candidate, 'assets/js/site-features.js')));
+  if (found) return found;
+  throw new Error(`Press checkout not found for behavior probes. Set PRESS_ROOT or place Press at ../Press. Checked: ${candidates.join(', ')}`);
+}
+const pressRoot = resolvePressRoot();
 
 const layout = read('theme/modules/layout.js');
 const interactions = read('theme/modules/interactions.js');
@@ -13,17 +24,20 @@ const source = `${layout}\n${interactions}`;
 const manifest = JSON.parse(read('theme/theme.json'));
 const releaseExample = JSON.parse(read('theme-release.example.json'));
 
-assert.equal(manifest.contractVersion, 3);
-assert.equal(manifest.engines.press, '>=3.4.127 <4.0.0');
-assert.equal(releaseExample.contractVersion, 3);
-assert.equal(releaseExample.engines.press, '>=3.4.127 <4.0.0');
-assert.doesNotMatch(source, /href\s*=\s*["']\?tab=posts["']/);
+assert.equal(manifest.contractVersion, 4);
+assert.equal(manifest.engines.press, '>=3.4.130 <4.0.0');
+assert.equal(releaseExample.contractVersion, 4);
+assert.equal(releaseExample.engines.press, '>=3.4.130 <4.0.0');
+assert.doesNotMatch(source, /[?&](?:tab|id)=/, 'v4 packaged source should use router href helpers for public routes');
+assert.doesNotMatch(source, /getRouteHref[\s\S]{0,160}\|\|\s*'#'/, 'v4 route helper null results should not become hash dead links');
+assert.doesNotMatch(layout, /<a[^>]*href="#"[^>]*data-site-home|<a[^>]*data-site-home[^>]*href="#"/, 'brand home link should not start as a hash dead link');
 assert.match(layout, /data-site-home/);
 assert.match(interactions, /siteFeatureContextEnabled/);
 assert.match(interactions, /function getRouter[\s\S]*ctx\.router/);
-assert.match(interactions, /function makeRuntimeHref[\s\S]*routerFunction\(params, 'withLangParam'\)/);
-assert.match(interactions, /function updateHomeLinks[\s\S]*getHomeSlug[\s\S]*data-site-home/);
-assert.match(interactions, /routerFunction\(params, 'searchEnabled'\)/, 'footer search links should use the v3 router search helper');
+assert.match(interactions, /function getRouteHref[\s\S]*routerFunction\(params, name\)/);
+assert.match(interactions, /function updateHomeLinks[\s\S]*getRouteHref\(params, 'getHomeHref'\)[\s\S]*data-site-home/);
+assert.match(interactions, /getRouteHref\(params, 'getSearchHref'\)/, 'footer search links should use the v4 router search href helper');
+assert.doesNotMatch(interactions, /renderDefaultTags/);
 
 [
   'visitorThemeControls',
@@ -62,8 +76,18 @@ assert.match(
 );
 assert.match(
   interactions,
-  /function buildCard\(\{ title, meta, translate, link, siteConfig, features \}\)[\s\S]*const showTags = featureEnabled\(\{ features \}, 'tags'\) && featureEnabled\(\{ features \}, 'search'\);[\s\S]*const tags = showTags && meta \? renderTags\(meta\.tag\) : ''/,
+  /function buildCard\(\{ title, meta, translate, link, siteConfig, features \}\)[\s\S]*if \(!link\) return '';[\s\S]*const showTags = featureEnabled\(\{ features \}, 'tags'\) && featureEnabled\(\{ features \}, 'search'\);[\s\S]*const tags = showTags && meta \? renderTags\(meta\.tag\) : ''/,
   'index/search cards should hide tags when tags or search are disabled'
+);
+assert.match(
+  interactions,
+  /function buildPagination\([\s\S]*renderPageControl[\s\S]*<span class="\$\{`\$\{className\} is-disabled`\.trim\(\)\}" aria-disabled="true">/,
+  'pagination should render disabled spans rather than hash links when route helpers return null'
+);
+assert.match(
+  interactions,
+  /hydrateArcusCardExcerpts\(filterEntriesWithPostHref\(params\.entries \|\| \[\], params\),/,
+  'excerpt hydration should use the same route-helper reachability as rendered cards'
 );
 assert.match(
   interactions,
@@ -92,13 +116,13 @@ assert.match(
 );
 assert.match(
   interactions,
-  /function renderNavLinks[\s\S]*routerFunction\(params, 'getHomeSlug'\)[\s\S]*routerFunction\(params, 'postsEnabled'\)[\s\S]*updateHomeLinks\(nav\.ownerDocument \|\| defaultDocument, \{ \.\.\.params, getHomeSlug: \(\) => homeSlug \}\);/,
-  'nav rendering should prefer ctx.router home/posts helpers before updating home links'
+  /function renderNavLinks[\s\S]*getRouteHref\(params, 'getPostsHref'\)[\s\S]*getRouteHref\(params, 'getTabHref', slug\)/,
+  'nav rendering should use v4 posts and tab href helpers'
 );
 assert.match(
   interactions,
-  /function updateHomeLinks[\s\S]*routerFunction\(params, 'getHomeSlug'\)[\s\S]*__press_get_home_slug[\s\S]*if \(!homeSlug\) return false;[\s\S]*makeRuntimeHref\(params, `\?tab=\$\{encodeURIComponent\(homeSlug\)\}`\);/,
-  'identity refresh should prefer ctx.router home helpers or preserve existing home hrefs'
+  /function updateHomeLinks[\s\S]*getRouteHref\(params, 'getHomeHref'\)[\s\S]*setHomeLinkHref\(link, href\)/,
+  'identity refresh should use the v4 home href helper and disable home links when no href is available'
 );
 assert.match(
   interactions,
@@ -107,7 +131,7 @@ assert.match(
 );
 
 const updateHomeLinksSource = interactions.slice(
-  interactions.indexOf('function updateHomeLinks'),
+  interactions.indexOf('function setHomeLinkHref'),
   interactions.indexOf('\n\nfunction getRegion')
 );
 const routerHelpersSource = interactions.slice(
@@ -122,9 +146,17 @@ const updateHomeLinks = new Function(
   `const activeThemeContext = null; ${routerHelpersSource}\n${updateHomeLinksSource}; return updateHomeLinks;`
 )(undefined, (href) => href);
 const homeLink = {
-  href: '?tab=about',
+  attributes: new Map([['href', '?tab=about']]),
   setAttribute(name, value) {
+    this.attributes.set(String(name), String(value));
     if (name === 'href') this.href = value;
+  },
+  removeAttribute(name) {
+    this.attributes.delete(String(name));
+    if (name === 'href') delete this.href;
+  },
+  getAttribute(name) {
+    return this.attributes.has(String(name)) ? this.attributes.get(String(name)) : null;
   }
 };
 const fakeDocument = {
@@ -133,11 +165,162 @@ const fakeDocument = {
     return selector === '[data-site-home]' ? [homeLink] : [];
   }
 };
-assert.equal(updateHomeLinks(fakeDocument, {}), false, 'identity refresh without home helper should not rewrite home links');
-assert.equal(homeLink.href, '?tab=about', 'identity refresh without home helper should preserve existing home href');
-assert.equal(updateHomeLinks(fakeDocument, { ctx: { router: { getHomeSlug: () => 'product', withLangParam: (href) => `${href}&lang=en` } } }), true, 'ctx.router home helper should update home links');
-assert.equal(homeLink.href, '?tab=product&lang=en', 'ctx.router withLangParam should write the resolved home href');
-assert.equal(updateHomeLinks(fakeDocument, { window: { __press_get_home_slug: () => 'landing' } }), true, 'runtime home helper should update home links');
-assert.equal(homeLink.href, '?tab=landing', 'runtime home helper should write the resolved home href');
+assert.equal(updateHomeLinks(fakeDocument, {}), false, 'identity refresh without home helper should not create a home href');
+assert.equal(homeLink.getAttribute('href'), null, 'identity refresh without home helper should remove stale home hrefs');
+assert.equal(homeLink.getAttribute('aria-disabled'), 'true', 'identity refresh without home helper should disable home links');
+assert.equal(homeLink.getAttribute('tabindex'), '-1', 'identity refresh without home helper should remove home links from tab order');
+const receiverRouter = {
+  homeHref: '?tab=product&lang=en',
+  getHomeHref() {
+    return this.homeHref;
+  }
+};
+assert.equal(updateHomeLinks(fakeDocument, { ctx: { router: receiverRouter } }), true, 'ctx.router home href helper should update home links');
+assert.equal(homeLink.getAttribute('href'), '?tab=product&lang=en', 'ctx.router withLangParam should write the resolved home href');
+assert.equal(homeLink.getAttribute('aria-disabled'), null, 'valid home helper should clear disabled state');
+assert.equal(homeLink.getAttribute('tabindex'), null, 'valid home helper should restore normal focus behavior');
+assert.equal(updateHomeLinks(fakeDocument, { ctx: { router: { getHomeHref: () => null } } }), false, 'null home helper should disable home links');
+assert.equal(homeLink.getAttribute('href'), null, 'null home helper should remove stale home hrefs');
+
+class TestElement {
+  constructor(tagName = 'div', ownerDocument = null) {
+    this.tagName = String(tagName || 'div').toUpperCase();
+    this.ownerDocument = ownerDocument;
+    this.children = [];
+    this.parentElement = null;
+    this.attributes = new Map();
+    this.className = '';
+    this.hidden = false;
+    this.textContent = '';
+    this._innerHTML = '';
+    this.style = {
+      setProperty(name, value) {
+        this[String(name)] = String(value);
+      },
+      removeProperty(name) {
+        delete this[String(name)];
+      }
+    };
+  }
+
+  get innerHTML() {
+    return this._innerHTML;
+  }
+
+  set innerHTML(value) {
+    this._innerHTML = String(value || '');
+  }
+
+  setAttribute(name, value = '') {
+    const key = String(name);
+    const str = String(value);
+    this.attributes.set(key, str);
+    if (key === 'class') this.className = str;
+    if (key === 'hidden') this.hidden = true;
+  }
+
+  getAttribute(name) {
+    const key = String(name);
+    if (this.attributes.has(key)) return this.attributes.get(key);
+    if (key === 'class' && this.className) return this.className;
+    return null;
+  }
+
+  removeAttribute(name) {
+    const key = String(name);
+    this.attributes.delete(key);
+    if (key === 'hidden') this.hidden = false;
+  }
+
+  querySelector() { return null; }
+  querySelectorAll() { return []; }
+  closest() { return null; }
+  addEventListener() {}
+  removeEventListener() {}
+  scrollIntoView() {}
+  getBoundingClientRect() { return { width: 1000, height: 1000, top: 0, left: 0 }; }
+}
+
+class TestDocument {
+  constructor() {
+    this.body = new TestElement('body', this);
+    this.documentElement = new TestElement('html', this);
+    this.defaultView = {
+      location: { href: 'https://example.test/', origin: 'https://example.test', pathname: '/' },
+      matchMedia: () => ({ matches: false }),
+      requestAnimationFrame: (fn) => setTimeout(fn, 0),
+      cancelAnimationFrame: (id) => clearTimeout(id),
+      scrollTo() {},
+      addEventListener() {},
+      removeEventListener() {}
+    };
+  }
+
+  createElement(tagName) {
+    return new TestElement(tagName, this);
+  }
+
+  querySelector() { return null; }
+  querySelectorAll() { return []; }
+  getElementById() { return null; }
+}
+
+async function importArcusModule() {
+  const tempRoot = mkdtempSync(resolve(tmpdir(), 'arcus-feature-test-'));
+  const tempModuleDir = resolve(tempRoot, 'assets/themes/arcus/modules');
+  mkdirSync(tempModuleDir, { recursive: true });
+  mkdirSync(resolve(tempRoot, 'assets'), { recursive: true });
+  symlinkSync(resolve(pressRoot, 'assets/js'), resolve(tempRoot, 'assets/js'), 'dir');
+  writeFileSync(resolve(tempModuleDir, 'interactions.js'), interactions);
+  return import(`${pathToFileURL(resolve(tempModuleDir, 'interactions.js')).href}?feature-test=${Date.now()}-${Math.random()}`);
+}
+
+const doc = new TestDocument();
+globalThis.document = doc;
+globalThis.window = doc.defaultView;
+globalThis.localStorage = { getItem: () => null, setItem() {}, removeItem() {} };
+const arcusModule = await importArcusModule();
+const allFeatures = { isEnabled: () => true };
+const nullRouter = {
+  getPostHref: () => null,
+  getPostsHref: () => null,
+  getSearchHref: () => null
+};
+const api = arcusModule.mount({
+  document: doc,
+  window: doc.defaultView,
+  features: allFeatures,
+  router: nullRouter,
+  i18n: {
+    t: (key) => key,
+    withLangParam: (href) => href
+  }
+});
+const indexMain = doc.createElement('main');
+api.effects.renderIndexView({
+  container: indexMain,
+  ctx: { router: nullRouter },
+  features: allFeatures,
+  pageEntries: [['Product', { location: 'product.md' }]],
+  page: 1,
+  totalPages: 2,
+  siteConfig: {}
+});
+assert.doesNotMatch(indexMain.innerHTML, /href="(?:#|)"/, 'null index route helpers should not render empty or hash links');
+assert.match(indexMain.innerHTML, /aria-disabled="true"/, 'null index pagination helpers should render disabled text controls');
+
+const searchMain = doc.createElement('main');
+api.effects.renderSearchResults({
+  container: searchMain,
+  ctx: { router: nullRouter },
+  features: allFeatures,
+  entries: [['Product', { location: 'product.md' }]],
+  query: 'Product',
+  page: 2,
+  totalPages: 3,
+  siteConfig: {}
+});
+assert.doesNotMatch(searchMain.innerHTML, /href="(?:#|)"/, 'null search route helpers should not render empty or hash links');
+assert.match(searchMain.innerHTML, /aria-disabled="true"/, 'null search pagination helpers should render disabled text controls');
 
 console.log('ok - Arcus public chrome feature gates');
