@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "type": "press-theme-demo-release-lock",
+  "repository": "EkilyHQ/Press-Theme-Arcus",
+  "slug": "arcus",
+  "target": {
+    "category": "themeDemo",
+    "ref": "demo",
+    "path": "demo-release-lock.json",
+    "type": "theme-demo-release-lock",
+    "reconciler": "theme-demo-release-sync",
+    "observed": {
+      "pressSystem": {
+        "path": "assets/press-system.json",
+        "type": "press-system-manifest"
+      },
+      "themeManifest": {
+        "path": "assets/themes/arcus/theme.json",
+        "type": "press-theme-manifest"
+      },
+      "themePacks": {
+        "path": "assets/themes/packs.json",
+        "type": "press-theme-packs"
+      }
+    }
+  },
+  "pressSystem": {
+    "version": "3.4.132",
+    "tag": "v3.4.132",
+    "sourceKind": "release-intent",
+    "releaseUrl": "https://github.com/EkilyHQ/Press/releases/tag/v3.4.132",
+    "asset": {
+      "name": "press-system-v3.4.132.zip",
+      "url": "https://raw.githubusercontent.com/EkilyHQ/Press/release-artifacts/v3.4.132/press-system-v3.4.132.zip",
+      "size": 1986886,
+      "digest": "sha256:e7724b10c511a8b00e25ba8ffe7976ac8b8865c1a691fe03c8412952b4965f51"
+    },
+    "releaseIntent": {
+      "type": "press-release-intent",
+      "source": "https://raw.githubusercontent.com/EkilyHQ/Press/release-artifacts/v3.4.132/release-intent.json"
+    },
+    "upgradeFrom": {
+      "ranges": [
+        ">=3.4.131 <3.4.132"
+      ],
+      "allowUnknownSource": false,
+      "message": "Update to v3.4.131 before installing v3.4.132."
+    }
+  },
+  "theme": {
+    "value": "arcus",
+    "label": "Arcus",
+    "version": "3.4.7",
+    "contractVersion": 4,
+    "engines": {
+      "press": ">=3.4.132 <4.0.0"
+    },
+    "release": {
+      "tag": "v3.4.7",
+      "htmlUrl": "https://github.com/EkilyHQ/Press-Theme-Arcus/releases/tag/v3.4.7",
+      "publishedAt": "2026-07-08T11:31:26Z",
+      "notes": ""
+    },
+    "asset": {
+      "name": "press-theme-arcus-v3.4.7.zip",
+      "url": "https://raw.githubusercontent.com/EkilyHQ/Press-Theme-Arcus/release-artifacts/v3.4.7/press-theme-arcus-v3.4.7.zip",
+      "size": 33582,
+      "digest": "sha256:7f81fac2735ad93d89067b25faf5b2b2283fcf85256149d1b2c86128c74e1094"
+    },
+    "releaseManifest": {
+      "source": "https://raw.githubusercontent.com/EkilyHQ/Press-Theme-Arcus/main/theme-release.json"
+    }
+  }
+}
