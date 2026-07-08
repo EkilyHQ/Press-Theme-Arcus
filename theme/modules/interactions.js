@@ -1966,7 +1966,9 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     if (root && effectiveConfig && effectiveConfig.themePack) {
       root.setAttribute('data-theme-pack', effectiveConfig.themePack);
     }
-    const settingsContext = ctx || (themeSettings ? { themeSettings } : activeThemeContext);
+    const settingsContext = ctx && typeof ctx === 'object'
+      ? (themeSettings ? { ...ctx, themeSettings } : ctx)
+      : (themeSettings ? { themeSettings } : activeThemeContext);
     reflectArcusThemeSettings(settingsContext, documentRef);
     return true;
   };

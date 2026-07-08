@@ -6,7 +6,7 @@
   "version": "3.4.7",
   "contractVersion": 4,
   "engines": {
-    "press": ">=3.4.130 <4.0.0"
+    "press": ">=3.4.132 <4.0.0"
   },
   "release": {
     "tag": "v3.4.7",
