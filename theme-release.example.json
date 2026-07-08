@@ -3,20 +3,20 @@
   "type": "press-theme",
   "value": "arcus",
   "label": "Arcus",
-  "version": "3.4.6",
+  "version": "3.4.7",
   "contractVersion": 4,
   "engines": {
-    "press": ">=3.4.130 <4.0.0"
+    "press": ">=3.4.132 <4.0.0"
   },
   "release": {
-    "tag": "v3.4.6",
-    "htmlUrl": "https://github.com/EkilyHQ/Press-Theme-Arcus/releases/tag/v3.4.6",
+    "tag": "v3.4.7",
+    "htmlUrl": "https://github.com/EkilyHQ/Press-Theme-Arcus/releases/tag/v3.4.7",
     "publishedAt": "2026-05-07T00:00:00Z",
     "notes": ""
   },
   "asset": {
-    "name": "press-theme-arcus-v3.4.6.zip",
-    "url": "https://github.com/EkilyHQ/Press-Theme-Arcus/releases/download/v3.4.6/press-theme-arcus-v3.4.6.zip",
+    "name": "press-theme-arcus-v3.4.7.zip",
+    "url": "https://github.com/EkilyHQ/Press-Theme-Arcus/releases/download/v3.4.7/press-theme-arcus-v3.4.7.zip",
     "size": 0,
     "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
   },

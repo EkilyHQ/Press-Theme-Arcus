@@ -21,13 +21,44 @@ const pressRoot = resolvePressRoot();
 const layout = read('theme/modules/layout.js');
 const interactions = read('theme/modules/interactions.js');
 const source = `${layout}\n${interactions}`;
+const css = read('theme/theme.css');
 const manifest = JSON.parse(read('theme/theme.json'));
 const releaseExample = JSON.parse(read('theme-release.example.json'));
+const semverPattern = /^[0-9]+\.[0-9]+\.[0-9]+$/;
 
 assert.equal(manifest.contractVersion, 4);
-assert.equal(manifest.engines.press, '>=3.4.130 <4.0.0');
-assert.equal(releaseExample.contractVersion, 4);
-assert.equal(releaseExample.engines.press, '>=3.4.130 <4.0.0');
+assert.equal(manifest.engines.press, '>=3.4.132 <4.0.0');
+assert.match(manifest.version, semverPattern);
+assert.equal(releaseExample.contractVersion, manifest.contractVersion);
+assert.deepEqual(releaseExample.engines, manifest.engines);
+assert.match(releaseExample.version, semverPattern);
+assert.equal(manifest.configSchema.type, 'object');
+assert.equal(manifest.configSchema.additionalProperties, false);
+[
+  'accentColor',
+  'backgroundStyle',
+  'radiusScale',
+  'cardDensity',
+  'mediaStyle'
+].forEach((key) => {
+  assert.ok(manifest.configSchema.properties[key], `configSchema should declare ${key}`);
+});
+assert.equal(manifest.configSchema.properties.accentColor['x-press'].control, 'color');
+assert.equal(manifest.configSchema.properties.accentColor['x-press'].cssVariable, '--arcus-user-accent');
+assert.equal(manifest.configSchema.properties.radiusScale['x-press'].control, 'range');
+assert.equal(manifest.configSchema.properties.radiusScale['x-press'].cssVariable, '--arcus-radius-scale');
+assert.match(css, /--arcus-user-accent/);
+assert.match(css, /--arcus-radius-scale/);
+assert.match(css, /\[data-arcus-background="plain"\]/);
+assert.match(css, /\[data-arcus-density="compact"\]/);
+assert.match(css, /\[data-arcus-media="minimal"\]/);
+assert.ok(
+  css.includes(':root[data-arcus-density="compact"] .arcus-card:first-child')
+    && css.includes(':root[data-arcus-density="spacious"] .arcus-card:first-child'),
+  'density modes should preserve first-card flush spacing'
+);
+assert.match(interactions, /function reflectArcusThemeSettings[\s\S]*getArcusThemeSettings/);
+assert.match(interactions, /ctx[\s\S]*theme[\s\S]*settings/);
 assert.doesNotMatch(source, /[?&](?:tab|id)=/, 'v4 packaged source should use router href helpers for public routes');
 assert.doesNotMatch(source, /getRouteHref[\s\S]{0,160}\|\|\s*'#'/, 'v4 route helper null results should not become hash dead links');
 assert.doesNotMatch(layout, /<a[^>]*href="#"[^>]*data-site-home|<a[^>]*data-site-home[^>]*href="#"/, 'brand home link should not start as a hash dead link');
@@ -296,6 +327,53 @@ const api = arcusModule.mount({
     withLangParam: (href) => href
   }
 });
+assert.equal(doc.documentElement.getAttribute('data-arcus-background'), null, 'default Arcus settings should not write a background attribute');
+assert.equal(doc.documentElement.getAttribute('data-arcus-density'), null, 'default Arcus settings should not write a density attribute');
+assert.equal(doc.documentElement.getAttribute('data-arcus-media'), null, 'default Arcus settings should not write a media attribute');
+api.effects.reflectThemeConfig({
+  siteConfig: { themePack: 'arcus' },
+  ctx: {
+    theme: {
+      settings: {
+        backgroundStyle: 'plain',
+        cardDensity: 'compact',
+        mediaStyle: 'minimal'
+      }
+    }
+  }
+});
+assert.equal(doc.documentElement.getAttribute('data-arcus-background'), 'plain', 'Arcus should reflect backgroundStyle from ctx.theme.settings');
+assert.equal(doc.documentElement.getAttribute('data-arcus-density'), 'compact', 'Arcus should reflect cardDensity from ctx.theme.settings');
+assert.equal(doc.documentElement.getAttribute('data-arcus-media'), 'minimal', 'Arcus should reflect mediaStyle from ctx.theme.settings');
+api.effects.reflectThemeConfig({
+  siteConfig: { themePack: 'arcus' },
+  ctx: { features: allFeatures },
+  themeSettings: {
+    settings: {
+      backgroundStyle: 'contrast',
+      cardDensity: 'spacious',
+      mediaStyle: 'contained'
+    }
+  }
+});
+assert.equal(doc.documentElement.getAttribute('data-arcus-background'), 'contrast', 'Arcus should fall back to themeSettings when ctx lacks theme.settings');
+assert.equal(doc.documentElement.getAttribute('data-arcus-density'), 'spacious', 'Arcus should fall back to themeSettings density when ctx lacks theme.settings');
+assert.equal(doc.documentElement.getAttribute('data-arcus-media'), 'contained', 'Arcus should fall back to themeSettings media style when ctx lacks theme.settings');
+api.effects.reflectThemeConfig({
+  siteConfig: { themePack: 'arcus' },
+  ctx: {
+    theme: {
+      settings: {
+        backgroundStyle: 'soft',
+        cardDensity: 'comfortable',
+        mediaStyle: 'immersive'
+      }
+    }
+  }
+});
+assert.equal(doc.documentElement.getAttribute('data-arcus-background'), null, 'Arcus should remove default backgroundStyle attributes');
+assert.equal(doc.documentElement.getAttribute('data-arcus-density'), null, 'Arcus should remove default cardDensity attributes');
+assert.equal(doc.documentElement.getAttribute('data-arcus-media'), null, 'Arcus should remove default mediaStyle attributes');
 const indexMain = doc.createElement('main');
 api.effects.renderIndexView({
   container: indexMain,
