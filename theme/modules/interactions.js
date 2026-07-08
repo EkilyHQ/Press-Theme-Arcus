@@ -41,6 +41,48 @@ function setThemeI18n(context = {}) {
   activeThemeContext = context && typeof context === 'object' ? context : null;
 }
 
+const ARCUS_THEME_SETTING_ATTRIBUTES = {
+  backgroundStyle: {
+    attr: 'data-arcus-background',
+    defaultValue: 'soft',
+    values: new Set(['soft', 'plain', 'contrast'])
+  },
+  cardDensity: {
+    attr: 'data-arcus-density',
+    defaultValue: 'comfortable',
+    values: new Set(['comfortable', 'compact', 'spacious'])
+  },
+  mediaStyle: {
+    attr: 'data-arcus-media',
+    defaultValue: 'immersive',
+    values: new Set(['immersive', 'contained', 'minimal'])
+  }
+};
+
+function getArcusThemeSettings(context = activeThemeContext) {
+  const direct = context && context.theme && context.theme.settings;
+  if (direct && typeof direct === 'object' && !Array.isArray(direct)) return direct;
+  const resolved = context && context.themeSettings && context.themeSettings.settings;
+  if (resolved && typeof resolved === 'object' && !Array.isArray(resolved)) return resolved;
+  return {};
+}
+
+function reflectArcusThemeSettings(context = activeThemeContext, documentRef = defaultDocument) {
+  const root = documentRef && documentRef.documentElement;
+  if (!root || typeof root.setAttribute !== 'function') return false;
+  const settings = getArcusThemeSettings(context);
+  Object.keys(ARCUS_THEME_SETTING_ATTRIBUTES).forEach((key) => {
+    const rule = ARCUS_THEME_SETTING_ATTRIBUTES[key];
+    const value = settings && settings[key] != null ? String(settings[key]) : rule.defaultValue;
+    if (value && value !== rule.defaultValue && rule.values.has(value)) {
+      root.setAttribute(rule.attr, value);
+    } else if (typeof root.removeAttribute === 'function') {
+      root.removeAttribute(rule.attr);
+    }
+  });
+  return true;
+}
+
 function featureEnabled(params = {}, key) {
   const features = (params && params.features)
     || (params && params.ctx && params.ctx.features)
@@ -1918,11 +1960,14 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     return true;
   };
 
-  hooks.reflectThemeConfig = ({ siteConfig }) => {
+  hooks.reflectThemeConfig = ({ siteConfig, config, ctx, themeSettings } = {}) => {
     const root = documentRef.querySelector('.arcus-shell');
-    if (root && siteConfig && siteConfig.themePack) {
-      root.setAttribute('data-theme-pack', siteConfig.themePack);
+    const effectiveConfig = siteConfig || config || currentSiteConfig || {};
+    if (root && effectiveConfig && effectiveConfig.themePack) {
+      root.setAttribute('data-theme-pack', effectiveConfig.themePack);
     }
+    const settingsContext = ctx || (themeSettings ? { themeSettings } : activeThemeContext);
+    reflectArcusThemeSettings(settingsContext, documentRef);
     return true;
   };
 
@@ -1944,6 +1989,7 @@ export function mount(context = {}) {
   const doc = context.document || defaultDocument;
   const win = (context.document && context.document.defaultView) || defaultWindow;
   const effects = mountHooks(doc, win);
+  reflectArcusThemeSettings(context, doc);
   updateSearchPlaceholder(doc, { context });
   setupToolsPanel(doc, win, context);
   setupDynamicBackground(doc, win);

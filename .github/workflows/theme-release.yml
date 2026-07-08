@@ -28,7 +28,7 @@ jobs:
       THEME_SLUG: arcus
       THEME_LABEL: Arcus
       REQUESTED_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || '' }}
-      PRESS_CONTRACT_CHECK_REF: v3.4.130
+      PRESS_CONTRACT_CHECK_REF: v3.4.132
     steps:
       - name: Checkout theme
         uses: actions/checkout@v6

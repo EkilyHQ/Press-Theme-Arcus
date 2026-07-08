@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/theme.json",
   "name": "Arcus",
-  "version": "3.4.6",
+  "version": "3.4.7",
   "contractVersion": 4,
   "engines": {
     "press": ">=3.4.130 <4.0.0"
@@ -69,7 +69,122 @@
   "scrollContainer": "region:scrollContainer",
   "configSchema": {
     "type": "object",
-    "additionalProperties": true
+    "additionalProperties": false,
+    "properties": {
+      "accentColor": {
+        "type": "string",
+        "format": "color",
+        "title": "Accent color",
+        "description": "Primary brand accent used for links, tags, focus states, and shared Press tokens.",
+        "default": "#7b8bff",
+        "x-press": {
+          "control": "color",
+          "group": "Brand",
+          "cssVariable": "--arcus-user-accent"
+        }
+      },
+      "backgroundStyle": {
+        "type": "string",
+        "title": "Background style",
+        "description": "Overall page background treatment.",
+        "default": "soft",
+        "enum": [
+          "soft",
+          "plain",
+          "contrast"
+        ],
+        "x-press": {
+          "control": "select",
+          "group": "Brand",
+          "options": [
+            {
+              "value": "soft",
+              "label": "Soft"
+            },
+            {
+              "value": "plain",
+              "label": "Plain"
+            },
+            {
+              "value": "contrast",
+              "label": "Contrast"
+            }
+          ]
+        }
+      },
+      "radiusScale": {
+        "type": "number",
+        "title": "Corner radius",
+        "description": "Scales Arcus corner radii without changing layout.",
+        "default": 1,
+        "minimum": 0,
+        "maximum": 1.6,
+        "multipleOf": 0.05,
+        "x-press": {
+          "control": "range",
+          "group": "Shape",
+          "cssVariable": "--arcus-radius-scale"
+        }
+      },
+      "cardDensity": {
+        "type": "string",
+        "title": "Card density",
+        "description": "Spacing density for post lists and search results.",
+        "default": "comfortable",
+        "enum": [
+          "comfortable",
+          "compact",
+          "spacious"
+        ],
+        "x-press": {
+          "control": "select",
+          "group": "Layout",
+          "options": [
+            {
+              "value": "comfortable",
+              "label": "Comfortable"
+            },
+            {
+              "value": "compact",
+              "label": "Compact"
+            },
+            {
+              "value": "spacious",
+              "label": "Spacious"
+            }
+          ]
+        }
+      },
+      "mediaStyle": {
+        "type": "string",
+        "title": "Hero media style",
+        "description": "Treatment for article hero media.",
+        "default": "immersive",
+        "enum": [
+          "immersive",
+          "contained",
+          "minimal"
+        ],
+        "x-press": {
+          "control": "select",
+          "group": "Layout",
+          "options": [
+            {
+              "value": "immersive",
+              "label": "Immersive"
+            },
+            {
+              "value": "contained",
+              "label": "Contained"
+            },
+            {
+              "value": "minimal",
+              "label": "Minimal"
+            }
+          ]
+        }
+      }
+    }
   },
   "content": {
     "shapes": [
