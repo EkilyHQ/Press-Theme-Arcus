@@ -1,10 +1,10 @@
 {
   "$schema": "../../schema/theme.json",
   "name": "Arcus",
-  "version": "3.4.5",
-  "contractVersion": 3,
+  "version": "3.4.6",
+  "contractVersion": 4,
   "engines": {
-    "press": ">=3.4.127 <4.0.0"
+    "press": ">=3.4.130 <4.0.0"
   },
   "styles": [
     "theme.css"

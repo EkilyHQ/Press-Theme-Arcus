@@ -27,7 +27,7 @@ export function mount(context = {}) {
     el.innerHTML = `
       <div class="arcus-header__inner">
         <div class="arcus-header__brand">
-          <a class="arcus-brand" href="#" data-site-home>
+          <a class="arcus-brand" data-site-home aria-disabled="true" tabindex="-1">
             <div class="arcus-brand__mark arcus-brand__mark--placeholder">
               <img class="arcus-brand__logo" data-site-logo alt="" loading="lazy" decoding="async" hidden />
             </div>

@@ -20,7 +20,7 @@ import {
 } from '../../../js/theme.js';
 import { hydratePostImages, hydratePostVideos, applyLazyLoadingIn, hydrateCardCovers } from '../../../js/post-render.js';
 import { renderPostMetaCard, renderOutdatedCard } from '../../../js/templates.js';
-import { attachHoverTooltip, renderTagSidebar as renderDefaultTags } from '../../../js/tags.js';
+import { attachHoverTooltip } from '../../../js/tags.js';
 import { prefersReducedMotion } from '../../../js/dom-utils.js';
 import { renderPressPostCardHtml } from '../../../js/post-card-html.js';
 import { siteFeatureContextEnabled } from '../../../js/site-features.js';
@@ -58,12 +58,18 @@ function getRouter(params = {}) {
 
 function routerFunction(params = {}, name) {
   const router = getRouter(params);
-  return router && typeof router[name] === 'function' ? router[name] : null;
+  return router && typeof router[name] === 'function' ? router[name].bind(router) : null;
 }
 
-function makeRuntimeHref(params = {}, href = '#') {
-  const withLang = routerFunction(params, 'withLangParam');
-  return withLang ? withLang(href) : withLangParam(href);
+function getRouteHref(params = {}, name, ...args) {
+  const helper = routerFunction(params, name);
+  if (!helper) return null;
+  try {
+    const href = helper(...args);
+    return href ? String(href) : null;
+  } catch (_) {
+    return null;
+  }
 }
 
 function setChromeHidden(element, hidden) {
@@ -75,20 +81,26 @@ function setChromeHidden(element, hidden) {
   } catch (_) {}
 }
 
+function setHomeLinkHref(link, href) {
+  if (!link) return;
+  if (!href) {
+    try { link.removeAttribute('href'); } catch (_) {}
+    try { link.setAttribute('aria-disabled', 'true'); } catch (_) {}
+    try { link.setAttribute('tabindex', '-1'); } catch (_) {}
+    return;
+  }
+  try { link.setAttribute('href', href); } catch (_) {}
+  try { link.removeAttribute('aria-disabled'); } catch (_) {}
+  try { link.removeAttribute('tabindex'); } catch (_) {}
+}
+
 function updateHomeLinks(documentRef = defaultDocument, params = {}) {
   if (!documentRef || typeof documentRef.querySelectorAll !== 'function') return false;
-  const windowRef = params.window || (documentRef && documentRef.defaultView) || defaultWindow;
-  const getHomeSlug = routerFunction(params, 'getHomeSlug')
-    || (typeof params.getHomeSlug === 'function'
-    ? params.getHomeSlug
-    : (windowRef && typeof windowRef.__press_get_home_slug === 'function' ? windowRef.__press_get_home_slug : null));
-  const homeSlug = getHomeSlug ? String(getHomeSlug() || '').trim() : '';
-  if (!homeSlug) return false;
-  const href = makeRuntimeHref(params, `?tab=${encodeURIComponent(homeSlug)}`);
+  const href = getRouteHref(params, 'getHomeHref');
   documentRef.querySelectorAll('[data-site-home]').forEach((link) => {
-    try { link.setAttribute('href', href); } catch (_) {}
+    setHomeLinkHref(link, href);
   });
-  return true;
+  return !!href;
 }
 
 function getRegion(name, documentRef = defaultDocument) {
@@ -596,6 +608,7 @@ function fadeOut(element, onDone) {
 }
 
 function buildCard({ title, meta, translate, link, siteConfig, features }) {
+  if (!link) return '';
   const excerpt = meta && meta.excerpt ? String(meta.excerpt) : '';
   const showPostMeta = featureEnabled({ features }, 'postMeta');
   const date = showPostMeta && meta && meta.date ? formatDisplayDate(meta.date) : '';
@@ -671,40 +684,48 @@ function hydrateArcusCardExcerpts(entries = [], context = {}) {
   });
 }
 
-function buildPagination({ page, totalPages, baseHref, query }) {
+function filterEntriesWithPostHref(entries = [], context = {}) {
+  return (Array.isArray(entries) ? entries : []).filter(([, meta]) => {
+    const location = meta && meta.location ? String(meta.location) : '';
+    return !!(location && getRouteHref(context, 'getPostHref', location));
+  });
+}
+
+function buildPagination({ page, totalPages, makeHref }) {
   if (!totalPages || totalPages <= 1) return '';
   const mkHref = (p) => {
-    try {
-      const url = new URL(baseHref, defaultWindow ? defaultWindow.location.href : (typeof location !== 'undefined' ? location.href : ''));
-      url.searchParams.set('page', p);
-      if (query && query.q) {
-        if (query.q) url.searchParams.set('q', query.q);
-        else url.searchParams.delete('q');
+    if (typeof makeHref === 'function') {
+      try {
+        const href = makeHref(p);
+        return href ? String(href) : '';
+      } catch (_) {
+        return '';
       }
-      if (query && query.tag) {
-        if (query.tag) url.searchParams.set('tag', query.tag);
-        else url.searchParams.delete('tag');
-      }
-      return url.toString();
-    } catch (_) {
-      return baseHref;
     }
+    return '';
   };
   const items = [];
+  const renderPageControl = (href, label, cls = '') => {
+    const text = escapeHtml(String(label || ''));
+    const className = String(cls || '').trim();
+    return href
+      ? `<a class="${className}" href="${escapeHtml(href)}">${text}</a>`
+      : `<span class="${`${className} is-disabled`.trim()}" aria-disabled="true">${text}</span>`;
+  };
   for (let i = 1; i <= totalPages; i++) {
     const href = mkHref(i);
-    items.push(`<a class="arcus-page${i === page ? ' is-current' : ''}" href="${escapeHtml(href)}">${i}</a>`);
+    items.push(renderPageControl(href, String(i), `arcus-page${i === page ? ' is-current' : ''}`));
   }
   const prevHref = page > 1 ? mkHref(page - 1) : '';
   const nextHref = page < totalPages ? mkHref(page + 1) : '';
   return `<nav class="arcus-pagination" aria-label="${t('ui.pagination')}">
-    <a class="arcus-page prev${prevHref ? '' : ' is-disabled'}" href="${prevHref ? escapeHtml(prevHref) : '#'}" ${prevHref ? '' : 'aria-disabled="true"'}>${t('ui.prev')}</a>
+    ${renderPageControl(prevHref, t('ui.prev'), 'arcus-page prev')}
     <div class="arcus-page__list">${items.join('')}</div>
-    <a class="arcus-page next${nextHref ? '' : ' is-disabled'}" href="${nextHref ? escapeHtml(nextHref) : '#'}" ${nextHref ? '' : 'aria-disabled="true"'}>${t('ui.next')}</a>
+    ${renderPageControl(nextHref, t('ui.next'), 'arcus-page next')}
   </nav>`;
 }
 
-function decorateArticle(container, translate, utilities, markdown, meta, title) {
+function decorateArticle(container, translate, utilities, markdown, meta, title, params = {}) {
   if (!container) return;
   const copyBtn = container.querySelector('.post-meta-copy');
   if (copyBtn) {
@@ -743,7 +764,8 @@ function decorateArticle(container, translate, utilities, markdown, meta, title)
     versionSelect.addEventListener('change', () => {
       const target = versionSelect.value;
       if (!target) return;
-      const href = withLangParam(`?id=${encodeURIComponent(target)}`);
+      const href = getRouteHref(params, 'getPostHref', target);
+      if (!href) return;
       if (defaultWindow) {
         defaultWindow.location.href = href;
       } else {
@@ -852,12 +874,14 @@ function renderNavLinks(nav, tabsBySlug, activeSlug, postsEnabled, getHomeSlug, 
   const postsEnabledFn = routerFunction(params, 'postsEnabled') || (typeof postsEnabled === 'function' ? postsEnabled : () => true);
   const homeSlug = getHome ? getHome() : 'posts';
   updateHomeLinks(nav.ownerDocument || defaultDocument, { ...params, getHomeSlug: () => homeSlug });
-  if (postsEnabledFn()) {
-    items.push({ slug: 'posts', label: t('ui.allPosts'), href: makeRuntimeHref(params, '?tab=posts') });
+  const postsHref = getRouteHref(params, 'getPostsHref');
+  if (postsEnabledFn() && postsHref) {
+    items.push({ slug: 'posts', label: t('ui.allPosts'), href: postsHref });
   }
   Object.entries(tabsBySlug || {}).forEach(([slug, info]) => {
     const label = info && info.title ? String(info.title) : slug;
-    items.push({ slug, label, href: makeRuntimeHref(params, `?tab=${encodeURIComponent(slug)}`) });
+    const href = getRouteHref(params, 'getTabHref', slug);
+    if (href) items.push({ slug, label, href });
   });
   nav.innerHTML = items.map(item => `<a class="arcus-nav__item${item.slug === activeSlug ? ' is-current' : ''}" data-tab="${escapeHtml(item.slug)}" href="${escapeHtml(item.href)}">${escapeHtml(item.label)}</a>`).join('');
   nav.setAttribute('data-active', activeSlug || homeSlug);
@@ -880,15 +904,18 @@ function renderFooterLinks(root, tabsBySlug, postsEnabled, getHomeSlug, getHomeL
   const getLabel = routerFunction(params, 'getHomeLabel') || getHomeLabel;
   const homeSlug = typeof getHome === 'function' ? getHome() : '';
   const homeLabel = typeof getLabel === 'function' ? getLabel() : '';
-  if (homeSlug) links.push({ href: makeRuntimeHref(params, `?tab=${encodeURIComponent(homeSlug)}`), label: homeLabel });
+  const homeHref = getRouteHref(params, 'getHomeHref');
+  if (homeHref) links.push({ href: homeHref, label: homeLabel || homeSlug });
   Object.entries(tabsBySlug || {}).forEach(([slug, info]) => {
     if (slug === homeSlug) return;
     const label = info && info.title ? String(info.title) : slug;
-    links.push({ href: makeRuntimeHref(params, `?tab=${encodeURIComponent(slug)}`), label });
+    const href = getRouteHref(params, 'getTabHref', slug);
+    if (href) links.push({ href, label });
   });
   const searchEnabledFn = routerFunction(params, 'searchEnabled');
   const searchEnabled = searchEnabledFn ? searchEnabledFn() : featureEnabled(params, 'search');
-  if (searchEnabled) links.push({ href: makeRuntimeHref(params, '?tab=search'), label: t('ui.searchTab') });
+  const searchHref = getRouteHref(params, 'getSearchHref');
+  if (searchEnabled && searchHref) links.push({ href: searchHref, label: t('ui.searchTab') });
   root.innerHTML = `<ul class="arcus-footer__list">${links.map(link => `<li><a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a></li>`).join('')}</ul>`;
 }
 
@@ -1599,7 +1626,15 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     setChromeHidden(getTagsRegion(documentRef), false);
     const render = utilities && typeof utilities.renderTagSidebar === 'function'
       ? utilities.renderTagSidebar
-      : renderDefaultTags;
+      : null;
+    if (!render) {
+      const tags = getTagsRegion(documentRef);
+      if (tags) {
+        tags.innerHTML = '';
+        setChromeHidden(tags, true);
+      }
+      return true;
+    }
     try { render(postsIndex || {}); } catch (_) {}
     return true;
   };
@@ -1644,7 +1679,7 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     return true;
   };
 
-  hooks.renderPostView = ({ containers, markdownHtml, fallbackTitle, postMetadata, markdown, postsIndex, postId, siteConfig, translate, utilities, tocHtml, features }) => {
+  hooks.renderPostView = ({ containers, markdownHtml, fallbackTitle, postMetadata, markdown, postsIndex, postId, siteConfig, translate, utilities, tocHtml, features, ctx }) => {
     const main = containers && containers.mainElement ? containers.mainElement : getRoleElement('main', documentRef);
     if (!main) return;
     const title = (postMetadata && postMetadata.title) || fallbackTitle || '';
@@ -1696,13 +1731,13 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     }
 
     try { if (utilities && typeof utilities.renderPostNav === 'function') utilities.renderPostNav(main.querySelector('[data-post-nav]'), postsIndex || {}, postMetadata && postMetadata.location); } catch (_) {}
-    decorateArticle(main, translate || t, { hydratePostImages, hydratePostVideos, applyLazyLoadingIn }, markdown, postMetadata, title);
+    decorateArticle(main, translate || t, { hydratePostImages, hydratePostVideos, applyLazyLoadingIn }, markdown, postMetadata, title, { ctx, features });
     scrollViewportToTop(documentRef, windowRef);
     return { decorated: true, title };
   };
 
-  hooks.decoratePostView = ({ container, translate, utilities, markdown, postMetadata, articleTitle }) => {
-    decorateArticle(container || getRoleElement('main', documentRef), translate || t, utilities || { hydratePostImages, hydratePostVideos, applyLazyLoadingIn }, markdown, postMetadata, articleTitle);
+  hooks.decoratePostView = ({ container, translate, utilities, markdown, postMetadata, articleTitle, ctx, features }) => {
+    decorateArticle(container || getRoleElement('main', documentRef), translate || t, utilities || { hydratePostImages, hydratePostVideos, applyLazyLoadingIn }, markdown, postMetadata, articleTitle, { ctx, features });
     return true;
   };
 
@@ -1716,17 +1751,16 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     } catch (_) { return false; }
   };
 
-  hooks.renderIndexView = ({ container, pageEntries, page, totalPages, siteConfig, features }) => {
+  hooks.renderIndexView = ({ container, pageEntries, page, totalPages, siteConfig, features, ctx }) => {
     if (!container) container = getRoleElement('main', documentRef);
     if (!container) return false;
     const cards = (pageEntries || []).map(([title, meta]) => {
-      const href = meta && meta.location ? withLangParam(`?id=${encodeURIComponent(meta.location)}`) : '#';
+      const href = meta && meta.location ? getRouteHref({ ctx, features }, 'getPostHref', meta.location) : '';
       return buildCard({ title, meta, translate: t, link: href, siteConfig, features });
     }).join('');
-    const baseHref = withLangParam('?tab=posts');
     container.innerHTML = `<div class="arcus-index index">
       <div class="arcus-index__grid">${cards || `<p class="arcus-empty">${t('ui.noResultsTitle')}</p>`}</div>
-      ${buildPagination({ page, totalPages, baseHref, query: {} })}
+      ${buildPagination({ page, totalPages, makeHref: (targetPage) => getRouteHref({ ctx, features }, 'getPostsHref', { page: targetPage }) })}
     </div>`;
     scrollViewportToTop(documentRef, windowRef);
     return true;
@@ -1739,19 +1773,18 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
       else hydrateCardCovers(getRoleElement('main', documentRef));
     } catch (_) {}
     try {
-      hydrateArcusCardExcerpts(params.entries || [], { ...params, container: target, document: documentRef });
+      hydrateArcusCardExcerpts(filterEntriesWithPostHref(params.entries || [], params), { ...params, container: target, document: documentRef });
     } catch (_) {}
     return true;
   };
 
-  hooks.renderSearchResults = ({ container, entries, query, totalPages, page, siteConfig, tagFilter, features }) => {
+  hooks.renderSearchResults = ({ container, entries, query, totalPages, page, siteConfig, tagFilter, features, ctx }) => {
     if (!container) container = getRoleElement('main', documentRef);
     if (!container) return false;
     const cards = (entries || []).map(([title, meta]) => {
-      const href = meta && meta.location ? withLangParam(`?id=${encodeURIComponent(meta.location)}`) : '#';
+      const href = meta && meta.location ? getRouteHref({ ctx, features }, 'getPostHref', meta.location) : '';
       return buildCard({ title, meta, translate: t, link: href, siteConfig, features });
     }).join('');
-    const baseHref = withLangParam('?tab=search');
     const summary = query
       ? `${t('ui.searchTab')} · ${escapeHtml(query)}`
       : tagFilter
@@ -1760,7 +1793,7 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     container.innerHTML = `<div class="arcus-index arcus-index--search index">
       <header class="arcus-index__header"><h2>${escapeHtml(summary)}</h2></header>
       <div class="arcus-index__grid">${cards || `<p class="arcus-empty">${t('ui.noResultsTitle')}</p>`}</div>
-      ${buildPagination({ page, totalPages, baseHref, query: { q: query, tag: tagFilter } })}
+      ${buildPagination({ page, totalPages, makeHref: (targetPage) => getRouteHref({ ctx, features }, 'getSearchHref', { q: query, tag: tagFilter, page: targetPage }) })}
     </div>`;
     scrollViewportToTop(documentRef, windowRef);
     return true;
@@ -1773,7 +1806,7 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
       else hydrateCardCovers(getRoleElement('main', documentRef));
     } catch (_) {}
     try {
-      hydrateArcusCardExcerpts(params.entries || [], { ...params, container: target, document: documentRef });
+      hydrateArcusCardExcerpts(filterEntriesWithPostHref(params.entries || [], params), { ...params, container: target, document: documentRef });
     } catch (_) {}
     return true;
   };
@@ -1798,7 +1831,8 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     postsByLocationTitle,
     postsIndex,
     siteConfig,
-    features
+    features,
+    ctx
   }) => {
     const main = containers && containers.mainElement ? containers.mainElement : getRoleElement('main', documentRef);
     if (!main) return false;
@@ -1814,7 +1848,7 @@ function mountHooks(documentRef = defaultDocument, windowRef = defaultWindow) {
     try { if (utilities && typeof utilities.applyLangHints === 'function') utilities.applyLangHints(body); } catch (_) {}
     try {
       if (utilities && typeof utilities.hydrateInternalLinkCards === 'function') {
-        const makeHref = utilities.makeLangHref || ((loc) => withLangParam(`?id=${encodeURIComponent(loc)}`));
+        const makeHref = utilities.makeLangHref || ((loc) => getRouteHref({ ctx, features }, 'getPostHref', loc));
         const fetchMarkdown = utilities.fetchMarkdown || (() => Promise.resolve(''));
         utilities.hydrateInternalLinkCards(body, {
           allowedLocations: allowedLocations || new Set(),
