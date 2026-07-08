@@ -169,7 +169,13 @@ assert.equal(updateHomeLinks(fakeDocument, {}), false, 'identity refresh without
 assert.equal(homeLink.getAttribute('href'), null, 'identity refresh without home helper should remove stale home hrefs');
 assert.equal(homeLink.getAttribute('aria-disabled'), 'true', 'identity refresh without home helper should disable home links');
 assert.equal(homeLink.getAttribute('tabindex'), '-1', 'identity refresh without home helper should remove home links from tab order');
-assert.equal(updateHomeLinks(fakeDocument, { ctx: { router: { getHomeHref: () => '?tab=product&lang=en' } } }), true, 'ctx.router home href helper should update home links');
+const receiverRouter = {
+  homeHref: '?tab=product&lang=en',
+  getHomeHref() {
+    return this.homeHref;
+  }
+};
+assert.equal(updateHomeLinks(fakeDocument, { ctx: { router: receiverRouter } }), true, 'ctx.router home href helper should update home links');
 assert.equal(homeLink.getAttribute('href'), '?tab=product&lang=en', 'ctx.router withLangParam should write the resolved home href');
 assert.equal(homeLink.getAttribute('aria-disabled'), null, 'valid home helper should clear disabled state');
 assert.equal(homeLink.getAttribute('tabindex'), null, 'valid home helper should restore normal focus behavior');
