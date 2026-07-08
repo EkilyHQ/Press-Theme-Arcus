@@ -13,6 +13,7 @@ on:
         required: false
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -29,6 +30,8 @@ jobs:
       THEME_LABEL: Arcus
       REQUESTED_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || '' }}
       PRESS_CONTRACT_CHECK_REF: v3.4.132
+      PRESS_REPOSITORY: ${{ vars.PRESS_REPOSITORY || 'EkilyHQ/Press' }}
+      PRESS_RELEASE_TOKEN: ${{ secrets.PRESS_RELEASE_TOKEN || github.token }}
     steps:
       - name: Checkout theme
         uses: actions/checkout@v6
@@ -269,3 +272,16 @@ jobs:
             --target "${target}" \
             --title "${tag}" \
             --notes "Theme release ${tag}"
+
+      - name: Refresh demo site
+        if: steps.plan.outputs.should_release == 'true'
+        run: |
+          set -euo pipefail
+          press_tag="$(GH_TOKEN="${PRESS_RELEASE_TOKEN}" gh api "repos/${PRESS_REPOSITORY}/releases/latest" --jq '.tag_name')"
+          if [[ -z "${press_tag}" ]]; then
+            echo "Unable to resolve latest Press release tag." >&2
+            exit 1
+          fi
+          gh workflow run .github/workflows/sync-demo-from-press-release.yml \
+            --ref "${GITHUB_REF_NAME}" \
+            -f tag="${press_tag}"
