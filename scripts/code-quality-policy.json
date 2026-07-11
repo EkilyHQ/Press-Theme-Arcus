@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "scope": "Arcus first-party theme source and repository tooling",
+  "eslint": {
+    "profile": "@eslint/js recommended",
+    "measuredRules": [
+      {
+        "rule": "no-empty",
+        "decision": "accepted-no-action",
+        "observedDiagnostics": 42,
+        "observedAffectedFiles": 1,
+        "evidence": "Arcus intentionally contains best-effort browser cleanup and compatibility catches whose empty bodies preserve the primary rendering path when optional DOM operations fail."
+      },
+      {
+        "rule": "no-unused-vars",
+        "decision": "accepted-no-action",
+        "observedDiagnostics": 71,
+        "observedAffectedFiles": 1,
+        "evidence": "The Arcus theme contract retains callback, renderer, and compatibility signatures supplied by Press even when this theme does not consume every argument locally."
+      },
+      {
+        "rule": "no-useless-assignment",
+        "decision": "accepted-no-action",
+        "observedDiagnostics": 1,
+        "observedAffectedFiles": 1,
+        "evidence": "The single saved-theme fallback assignment is retained as legacy compatibility behavior and remains exactly measured until an intentional theme-source cleanup removes it."
+      }
+    ],
+    "noGrowth": {
+      "mechanism": "merge-base-only-shrinking-exact-diagnostic-baseline",
+      "command": "node scripts/test-eslint-debt-policy.mjs && node scripts/probe-eslint-debt.mjs",
+      "policy": "Repository tooling keeps every recommended rule enabled. Theme source excludes only the three measured legacy rules; all 114 path, rule, message, full lexical owner, full-file AST path with array ordinals, and normalized diagnostic-context fingerprints must match exactly and may only shrink relative to the merge base. All other recommended diagnostics fail CI."
+    },
+    "diagnosticBaseline": {
+      "file": "scripts/eslint-debt-baseline.json",
+      "decision": "exact-owner-context-fingerprint-baseline-with-zero-growth",
+      "initialDiagnostics": 114,
+      "identity": "path, rule, messageId, message, full lexical owner, full-file AST path with array ordinals, normalized diagnostic-context fingerprint, and duplicate occurrence",
+      "bootstrap": "The initial baseline must be a subset of diagnostics independently recomputed from the exact merge-base theme source; a same-count owner or context swap is forbidden."
+    },
+    "inlineConfiguration": {
+      "decision": "forbidden",
+      "mechanism": "linterOptions.noInlineConfig",
+      "proofCommand": "node scripts/test-eslint-policy.mjs",
+      "policy": "Source comments cannot disable or reconfigure ESLint rules. The executable proof loads the real project configuration and confirms a used no-undef directive neither suppresses nor downgrades the severity-2 diagnostic. Arcus's one historical no-restricted-globals comment is masked only to avoid noInlineConfig's inert-comment warning; it cannot alter rule results and duplicate occurrences fail lint."
+    },
+    "legacyInertDirective": {
+      "path": "theme/modules/interactions.js",
+      "source": "// eslint-disable-line no-restricted-globals",
+      "reviewedContext": "location.href = href; // eslint-disable-line no-restricted-globals",
+      "observedOccurrences": 1,
+      "decision": "accepted-inert-comment",
+      "evidence": "The comment predates this repository configuration, targets a rule that is not part of the project policy, and is rendered inert by noInlineConfig. A narrowly scoped processor masks only its warning text so the zero-warning lint gate remains exact without changing release-bearing theme source."
+    },
+    "removalCondition": "Remove an exclusion or the inert-comment mask after an intentional theme cleanup makes the corresponding exact baseline reach zero without changing the Press theme contract."
+  },
+  "prettier": {
+    "baseline": {
+      "file": "scripts/prettier-baseline.json",
+      "initialFiles": 11
+    },
+    "excludedGeneratedFiles": ["theme-release.example.json", "theme-release.json", "theme/theme.json"],
+    "noGrowth": {
+      "mechanism": "merge-base-shrinking-file-baseline",
+      "baseRefEnvironmentVariable": "CODE_QUALITY_BASE_REF",
+      "headShaEnvironmentVariable": "CODE_QUALITY_HEAD_SHA",
+      "policy": "New candidate files must pass Prettier. A changed legacy file must be formatted and removed from the baseline; only exact-content renames may transfer baseline ownership."
+    }
+  },
+  "htmlSinks": {
+    "decision": "reviewed-exact-fingerprint-baseline-with-zero-growth",
+    "policyFile": "scripts/html-sink-policy.json",
+    "scope": "theme/**/*.js and theme/**/*.mjs",
+    "policy": "Every known HTML write or parser sink is classified by path, full lexical owner, full-file AST path with array ordinals, kind, normalized semantic AST fingerprint, disposition, and rationale. The first policy must be a subset of sinks independently recomputed from the exact merge-base theme source; after that, approved keys may only shrink and established wrapper names cannot be removed or renamed. Wrapper and native sink aliases, binds, calls, exports, callbacks, destructured document references, and dynamic parser MIME values fail closed. Reflect and Object helper aliases, bind/call/apply invocation forms, opaque properties or payloads, const or spread Object.assign payloads, defineProperty, and defineProperties HTML-property writes are explicit sinks."
+  }
+}

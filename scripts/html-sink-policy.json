@@ -1,0 +1,577 @@
+{
+  "schemaVersion": 1,
+  "decision": "reviewed-exact-fingerprint-baseline-with-zero-growth",
+  "scope": ["theme/**/*.js", "theme/**/*.mjs"],
+  "rationale": "Arcus intentionally renders Press-sanitized content, reviewed Press renderer output, and owned escaped or static templates. Exact semantic fingerprints pin each write or wrapper call to its full lexical owner and full-file AST path so equivalent source cannot move between contexts without review.",
+  "wrappers": [
+    {
+      "name": "applyOptions",
+      "rationale": "applyOptions is Arcus's local theme-pack option wrapper; each caller is fingerprinted because the helper clears a live select before rebuilding sanitized value and text option nodes through DOM APIs."
+    },
+    {
+      "name": "clearArcusToc",
+      "rationale": "clearArcusToc is Arcus's reviewed TOC reset wrapper; each caller is fingerprinted because the helper can reach the live DOM through a component clear method or a constant empty-string fallback."
+    },
+    {
+      "name": "populateThemePackOptions",
+      "rationale": "populateThemePackOptions is Arcus's currently dormant theme-pack option wrapper; retaining it in policy ensures any future call site becomes explicit sink growth even though its existing clear is already fingerprinted."
+    },
+    {
+      "name": "renderFooterLinks",
+      "rationale": "renderFooterLinks is Arcus's reviewed footer navigation wrapper; it accepts only router-produced hrefs and escapes both every href and visible label before insertion."
+    },
+    {
+      "name": "renderLinksList",
+      "rationale": "renderLinksList is Arcus's reviewed profile-link wrapper; it sanitizes each URL and escapes every URL attribute and visible label before insertion."
+    },
+    {
+      "name": "renderLoader",
+      "rationale": "renderLoader is Arcus's reviewed loading-state wrapper; it inserts a source-owned skeleton and escapes the translated status message."
+    },
+    {
+      "name": "renderNavLinks",
+      "rationale": "renderNavLinks is Arcus's reviewed primary-navigation wrapper; it escapes slugs, router-produced hrefs, and labels before insertion."
+    },
+    {
+      "name": "renderStaticView",
+      "rationale": "renderStaticView is Arcus's reviewed static-tab wrapper; it escapes the heading and accepts the tab body only from Press's rendered-content boundary."
+    },
+    {
+      "name": "resetToolsPanel",
+      "rationale": "resetToolsPanel is Arcus's reviewed theme-control reset wrapper; it performs only a constant empty clear before delegating to the trusted Press controls mount."
+    },
+    {
+      "name": "setupToolsPanel",
+      "rationale": "setupToolsPanel is Arcus's reviewed theme-control wrapper; its only direct write is a constant empty clear when controls are disabled, otherwise it mounts the trusted Press component."
+    },
+    {
+      "name": "showToc",
+      "rationale": "showToc is Arcus's reviewed table-of-contents wrapper; it escapes the local title and accepts tocHtml only from Press's rendered TOC boundary."
+    }
+  ],
+  "expectedKinds": {
+    "html-wrapper-call:applyOptions": 5,
+    "html-wrapper-call:clearArcusToc": 6,
+    "html-wrapper-call:renderFooterLinks": 1,
+    "html-wrapper-call:renderLinksList": 1,
+    "html-wrapper-call:renderLoader": 2,
+    "html-wrapper-call:renderNavLinks": 1,
+    "html-wrapper-call:renderStaticView": 1,
+    "html-wrapper-call:resetToolsPanel": 1,
+    "html-wrapper-call:setupToolsPanel": 3,
+    "html-wrapper-call:showToc": 3,
+    "innerHTML-write": 27
+  },
+  "approved": [
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:clearArcusToc",
+      "context": "function:clearArcusToc@path:body[77]/body/body[2]/alternate/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:b21d6511424de52a86b1adc82a0d662ef12cf7d5497ce36dd3b88210cb14721c",
+      "occurrence": 1,
+      "disposition": "empty-clear",
+      "rationale": "The fallback TOC reset assigns only a constant empty string when the Press TOC component has no clear method."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mount",
+      "context": "function:mount@path:body[82]/declaration/body/body[6]/expression",
+      "kind": "html-wrapper-call:setupToolsPanel",
+      "fingerprint": "sha256:4b66542f885b4f2c14a8563821b32e3055038b977c082407517bf4d3ddfcd7e6",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates theme controls to the reviewed setup wrapper, whose only HTML write is a constant empty clear in the disabled branch."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.enhanceIndexLayout",
+      "context": "function:mountHooks/assignment:hooks.enhanceIndexLayout@path:body[81]/body/body[14]/expression/right/body/body[4]/block/body[0]/alternate/body[1]/consequent/body[0]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:5f4bbc3d2a24f19bc617517a01869f4ed1ebb13d858083d6befd5d37f22113ac",
+      "occurrence": 1,
+      "disposition": "empty-clear",
+      "rationale": "The index enhancement feature-disabled branch assigns only a constant empty string before hiding the tags region."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.handleViewChange",
+      "context": "function:mountHooks/assignment:hooks.handleViewChange@path:body[81]/body/body[12]/expression/right/body/body[3]/consequent/body[0]/expression",
+      "kind": "html-wrapper-call:clearArcusToc",
+      "fingerprint": "sha256:c6a89bc65539573a4368dac77b4923ae007a2d415a8cd822012bb102a0df8c52",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates TOC cleanup to the reviewed clearArcusToc wrapper, which can only invoke the trusted component clear method or assign a constant empty string."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.handleViewChange",
+      "context": "function:mountHooks/assignment:hooks.handleViewChange@path:body[81]/body/body[12]/expression/right/body/body[6]/consequent/body[1]/consequent/body[0]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:627a4f943db2f96f45a5b949fe286f0cc6827eaa6f960ecd5ddddb9c6b9758b1",
+      "occurrence": 1,
+      "disposition": "empty-clear",
+      "rationale": "The view-change feature gate assigns only a constant empty string before hiding the tags region."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderErrorState",
+      "context": "function:mountHooks/assignment:hooks.renderErrorState@path:body[81]/body/body[11]/expression/right/body/body[5]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:466a18640f4836d1b30a776dff61a7144cd22a05460646d5241e790fd3dd6166",
+      "occurrence": 1,
+      "disposition": "escaped-theme-template",
+      "rationale": "The error-state heading, body, action labels, and route attributes are all escaped before insertion."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderFooterNav",
+      "context": "function:mountHooks/assignment:hooks.renderFooterNav@path:body[81]/body/body[16]/expression/right/body/body[2]/expression",
+      "kind": "html-wrapper-call:renderFooterLinks",
+      "fingerprint": "sha256:a8759e62c0040f0fc623e65e1a331678a3ef4861d5bf20cf0cc17c92c5f5eb55",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates footer navigation rendering to the reviewed wrapper that escapes router-produced hrefs and labels."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderIndexView",
+      "context": "function:mountHooks/assignment:hooks.renderIndexView@path:body[81]/body/body[21]/expression/right/body/body[3]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:5881e0103d4f4ef0fc52f32c3e3fce8b74e672d1df13566c6849114b955dbfd6",
+      "occurrence": 1,
+      "disposition": "press-renderer-output",
+      "rationale": "Index cards come from the shared Press card renderer; Arcus escapes pagination routes and renders only first-party translated empty-state text."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderPostLoadingState",
+      "context": "function:mountHooks/assignment:hooks.renderPostLoadingState@path:body[81]/body/body[17]/expression/right/body/body[1]/expression",
+      "kind": "html-wrapper-call:renderLoader",
+      "fingerprint": "sha256:b17d53247c44e8e715b8a673b88ea8d23a88b101e5a68a9a75ad416e726182be",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates loading-state rendering to the reviewed wrapper that inserts owned structure and escapes its message."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderPostTOC",
+      "context": "function:mountHooks/assignment:hooks.renderPostTOC@path:body[81]/body/body[10]/expression/right/body/body[1]/consequent/body[0]/expression",
+      "kind": "html-wrapper-call:clearArcusToc",
+      "fingerprint": "sha256:f2cd20bba22fbc48dbcfc14a0b9f89a5e129600f60559e28668a11e3a6855bcd",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates TOC cleanup to the reviewed clearArcusToc wrapper, which can only invoke the trusted component clear method or assign a constant empty string."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderPostTOC",
+      "context": "function:mountHooks/assignment:hooks.renderPostTOC@path:body[81]/body/body[10]/expression/right/body/body[2]/expression",
+      "kind": "html-wrapper-call:showToc",
+      "fingerprint": "sha256:bd2a9ada7f94563c7fdedca4ecc48ff378e20da7e010e8ff96cf8212a384de14",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates TOC rendering to the reviewed wrapper that escapes its title and accepts only Press-rendered tocHtml."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderPostView/variable:renderFallbackToc",
+      "context": "function:mountHooks/assignment:hooks.renderPostView/variable:renderFallbackToc@path:body[81]/body/body[18]/expression/right/body/body[12]/declarations[0]/init/body/body[0]/consequent/body[0]/expression",
+      "kind": "html-wrapper-call:clearArcusToc",
+      "fingerprint": "sha256:d3bc9df7563c77079098173487edb816eac90fc0bcb520a0d3a6e39a2f8ca1a0",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates TOC cleanup to the reviewed clearArcusToc wrapper, which can only invoke the trusted component clear method or assign a constant empty string."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderPostView/variable:renderFallbackToc",
+      "context": "function:mountHooks/assignment:hooks.renderPostView/variable:renderFallbackToc@path:body[81]/body/body[18]/expression/right/body/body[12]/declarations[0]/init/body/body[1]/expression",
+      "kind": "html-wrapper-call:showToc",
+      "fingerprint": "sha256:f83d3d229d321502bcbee2d34ba12cdf469b0c4d18d323841872d2c3d2725e33",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates TOC rendering to the reviewed wrapper that escapes its title and accepts only Press-rendered tocHtml."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderPostView",
+      "context": "function:mountHooks/assignment:hooks.renderPostView@path:body[81]/body/body[18]/expression/right/body/body[10]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:f21a050ce20cf6f9c97638d07ac046bdab0c7bc54d18f4da63952a1c6d2fba7c",
+      "occurrence": 1,
+      "disposition": "press-renderer-output",
+      "rationale": "Arcus escapes owned metadata and inserts Markdown, tag, metadata-card, and outdated-card markup supplied by reviewed Press renderers."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderSearchResults",
+      "context": "function:mountHooks/assignment:hooks.renderSearchResults@path:body[81]/body/body[23]/expression/right/body/body[4]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:a077711c618760377e412e91a6c5a8ec3cd932949f9b368c798e86595310dda8",
+      "occurrence": 1,
+      "disposition": "press-renderer-output",
+      "rationale": "Search cards come from the shared Press card renderer; Arcus escapes the query summary and pagination routes before insertion."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderSiteLinks",
+      "context": "function:mountHooks/assignment:hooks.renderSiteLinks@path:body[81]/body/body[8]/expression/right/body/body[1]/expression",
+      "kind": "html-wrapper-call:renderLinksList",
+      "fingerprint": "sha256:bfd26e96dcf6837b6beffacdf1bbb677d3d19c63f776254c36be0aabdba45004",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates profile-link rendering to the reviewed wrapper that sanitizes URLs and escapes attributes and labels."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabLoadingState",
+      "context": "function:mountHooks/assignment:hooks.renderStaticTabLoadingState@path:body[81]/body/body[25]/expression/right/body/body[1]/expression",
+      "kind": "html-wrapper-call:renderLoader",
+      "fingerprint": "sha256:9aee636c4fd30bb944623748f61443b0b3f0574674650fec35e15ae2a14baae2",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates loading-state rendering to the reviewed wrapper that inserts owned structure and escapes its message."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabView",
+      "context": "function:mountHooks/assignment:hooks.renderStaticTabView@path:body[81]/body/body[26]/expression/right/body/body[13]/consequent/body[0]/alternate/alternate/body[0]/expression",
+      "kind": "html-wrapper-call:clearArcusToc",
+      "fingerprint": "sha256:322146564a73faef95611b9b35d910ace3dcf7fb50541c3b61f0c83688e17dc5",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates TOC cleanup to the reviewed clearArcusToc wrapper, which can only invoke the trusted component clear method or assign a constant empty string."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabView",
+      "context": "function:mountHooks/assignment:hooks.renderStaticTabView@path:body[81]/body/body[26]/expression/right/body/body[13]/consequent/body[0]/alternate/consequent/body[0]/expression",
+      "kind": "html-wrapper-call:showToc",
+      "fingerprint": "sha256:d6d769e1411cfcd8143f4d8ac67fc536a5c07be7f5b5f096d2efe847632e984a",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates TOC rendering to the reviewed wrapper that escapes its title and accepts only Press-rendered tocHtml."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabView",
+      "context": "function:mountHooks/assignment:hooks.renderStaticTabView@path:body[81]/body/body[26]/expression/right/body/body[13]/consequent/body[0]/consequent/body[0]/expression",
+      "kind": "html-wrapper-call:clearArcusToc",
+      "fingerprint": "sha256:3163c7145e92815b1f2a8923980ef58fd0a4990820f200d68594ed8a52301ca2",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates TOC cleanup to the reviewed clearArcusToc wrapper, which can only invoke the trusted component clear method or assign a constant empty string."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabView",
+      "context": "function:mountHooks/assignment:hooks.renderStaticTabView@path:body[81]/body/body[26]/expression/right/body/body[4]/expression",
+      "kind": "html-wrapper-call:renderStaticView",
+      "fingerprint": "sha256:23bc41ae452fc35001d2ed5214e2d5c41cac720efb44ce2101884b3f51c49093",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates static-tab rendering to the reviewed wrapper that escapes its heading and consumes only Press-rendered body HTML."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderTabs",
+      "context": "function:mountHooks/assignment:hooks.renderTabs@path:body[81]/body/body[15]/expression/right/body/body[2]/expression",
+      "kind": "html-wrapper-call:renderNavLinks",
+      "fingerprint": "sha256:7798a9669311f8b693a1118e87ab8cc94b168c2dd52d1e5a7b54ebeea8bd54ff",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates primary navigation rendering to the reviewed wrapper that escapes every slug, href, and label."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderTagSidebar",
+      "context": "function:mountHooks/assignment:hooks.renderTagSidebar@path:body[81]/body/body[13]/expression/right/body/body[0]/consequent/body[1]/consequent/body[0]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:173bde33d8086f957d8693bc30c78b788b49a535239f49fc1d989388bf0ca10b",
+      "occurrence": 1,
+      "disposition": "empty-clear",
+      "rationale": "The tag-sidebar feature-disabled branch assigns only a constant empty string before hiding the region."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.renderTagSidebar",
+      "context": "function:mountHooks/assignment:hooks.renderTagSidebar@path:body[81]/body/body[13]/expression/right/body/body[3]/consequent/body[1]/consequent/body[0]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:7c7eb2131d1b33823abdf67617f5347ec75f08c2d8244bd224fabce73e2047a2",
+      "occurrence": 1,
+      "disposition": "empty-clear",
+      "rationale": "The absent tag-renderer fallback assigns only a constant empty string before hiding the region."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.resetThemeControls",
+      "context": "function:mountHooks/assignment:hooks.resetThemeControls@path:body[81]/body/body[31]/expression/right/body",
+      "kind": "html-wrapper-call:resetToolsPanel",
+      "fingerprint": "sha256:6ee13891a4505aa94adf8d9befb8049b0d9f993895c79c60ccdcd8a47efac32d",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates controls cleanup to the reviewed reset wrapper, which performs only an empty clear before trusted remounting."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:mountHooks/assignment:hooks.setupThemeControls",
+      "context": "function:mountHooks/assignment:hooks.setupThemeControls@path:body[81]/body/body[30]/expression/right/body",
+      "kind": "html-wrapper-call:setupToolsPanel",
+      "fingerprint": "sha256:4be0341a78acb63ec678272cfe9467350ac4ef8a4e7e71e8fbde247ed7cad4db",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates theme controls to the reviewed setup wrapper, whose only HTML write is a constant empty clear in the disabled branch."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:populateThemePackOptions/callback:fetcher(literal:\"assets/themes/packs.json\",expression:ObjectExpression:470b09a3b2b3da6c16bee0b6c9013371982e4ebf40af541acc4d1fe0363a16a7).then(expression:ArrowFunctionExpression:798f3232be520c45e737dbcc8faae5c383f01a690d11fa0543bfda63c08b4136).then()#1",
+      "context": "function:populateThemePackOptions/callback:fetcher(literal:\"assets/themes/packs.json\",expression:ObjectExpression:470b09a3b2b3da6c16bee0b6c9013371982e4ebf40af541acc4d1fe0363a16a7).then(expression:ArrowFunctionExpression:798f3232be520c45e737dbcc8faae5c383f01a690d11fa0543bfda63c08b4136).then()#1@path:body[73]/body/body[9]/block/body[0]/expression/callee/object/callee/object/arguments[0]/body/body[0]/alternate/body[0]/expression",
+      "kind": "html-wrapper-call:applyOptions",
+      "fingerprint": "sha256:a960f58acdafae14a8e4bd854ce6a7f4cffb10b51eb6a98f327c63a20bcf282c",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates option rebuilding to the reviewed applyOptions wrapper, which clears only a constant empty string before creating sanitized value and text option nodes through DOM APIs."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:populateThemePackOptions/callback:fetcher(literal:\"assets/themes/packs.json\",expression:ObjectExpression:470b09a3b2b3da6c16bee0b6c9013371982e4ebf40af541acc4d1fe0363a16a7).then(expression:ArrowFunctionExpression:798f3232be520c45e737dbcc8faae5c383f01a690d11fa0543bfda63c08b4136).then()#1",
+      "context": "function:populateThemePackOptions/callback:fetcher(literal:\"assets/themes/packs.json\",expression:ObjectExpression:470b09a3b2b3da6c16bee0b6c9013371982e4ebf40af541acc4d1fe0363a16a7).then(expression:ArrowFunctionExpression:798f3232be520c45e737dbcc8faae5c383f01a690d11fa0543bfda63c08b4136).then()#1@path:body[73]/body/body[9]/block/body[0]/expression/callee/object/callee/object/arguments[0]/body/body[0]/consequent/body[0]/expression",
+      "kind": "html-wrapper-call:applyOptions",
+      "fingerprint": "sha256:1109dd85ba793e28ab7349895505ac0f3f9f318176a850520ceb8aeace5ee427",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates option rebuilding to the reviewed applyOptions wrapper, which clears only a constant empty string before creating sanitized value and text option nodes through DOM APIs."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:populateThemePackOptions/callback:fetcher(literal:\"assets/themes/packs.json\",expression:ObjectExpression:470b09a3b2b3da6c16bee0b6c9013371982e4ebf40af541acc4d1fe0363a16a7).then(expression:ArrowFunctionExpression:798f3232be520c45e737dbcc8faae5c383f01a690d11fa0543bfda63c08b4136).then(expression:ArrowFunctionExpression:591f7e9d1f0bbc0b12951295df849bde7adc7181ebd1a6f7721700f3958da6a3).catch()#1",
+      "context": "function:populateThemePackOptions/callback:fetcher(literal:\"assets/themes/packs.json\",expression:ObjectExpression:470b09a3b2b3da6c16bee0b6c9013371982e4ebf40af541acc4d1fe0363a16a7).then(expression:ArrowFunctionExpression:798f3232be520c45e737dbcc8faae5c383f01a690d11fa0543bfda63c08b4136).then(expression:ArrowFunctionExpression:591f7e9d1f0bbc0b12951295df849bde7adc7181ebd1a6f7721700f3958da6a3).catch()#1@path:body[73]/body/body[9]/block/body[0]/expression/callee/object/arguments[0]/body/body[0]/expression",
+      "kind": "html-wrapper-call:applyOptions",
+      "fingerprint": "sha256:050513670b3a303544882210e7739eac2d943417758bc018d17f47338b0d481b",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates option rebuilding to the reviewed applyOptions wrapper, which clears only a constant empty string before creating sanitized value and text option nodes through DOM APIs."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:populateThemePackOptions/variable:applyOptions",
+      "context": "function:populateThemePackOptions/variable:applyOptions@path:body[73]/body/body[6]/declarations[0]/init/body/body[0]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:63c6ef0c1729ea885543307931132074f958300565e36d1bd777d2a7fe906de5",
+      "occurrence": 1,
+      "disposition": "empty-clear",
+      "rationale": "The theme-pack option reset assigns only a constant empty string before rebuilding options with DOM APIs and textContent."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:populateThemePackOptions",
+      "context": "function:populateThemePackOptions@path:body[73]/body/body[8]/consequent/body[0]/expression",
+      "kind": "html-wrapper-call:applyOptions",
+      "fingerprint": "sha256:9add416decfc066748231d0edfa7754b01d671432d5c2ce218fe565587187fa3",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates option rebuilding to the reviewed applyOptions wrapper, which clears only a constant empty string before creating sanitized value and text option nodes through DOM APIs."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:populateThemePackOptions",
+      "context": "function:populateThemePackOptions@path:body[73]/body/body[9]/handler/body/body[0]/expression",
+      "kind": "html-wrapper-call:applyOptions",
+      "fingerprint": "sha256:c401a52b22a46b28e8482d7264111726018127e3af2bc6969ce169d903713c06",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates option rebuilding to the reviewed applyOptions wrapper, which clears only a constant empty string before creating sanitized value and text option nodes through DOM APIs."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:renderFooterLinks",
+      "context": "function:renderFooterLinks@path:body[68]/body/body[17]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:09024fa486315de46884911bac15f0b08909db30a72958c547dc0738d686be42",
+      "occurrence": 1,
+      "disposition": "escaped-theme-template",
+      "rationale": "Every router-produced footer href and visible label is escaped before insertion into Arcus's owned list template."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:renderFooterLinks",
+      "context": "function:renderFooterLinks@path:body[68]/body/body[2]/consequent/body[0]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:182b8ab3f29ba3bddf1682fb9a3ae19a64194ffa4b8439aa9dd88060930ca0fb",
+      "occurrence": 1,
+      "disposition": "empty-clear",
+      "rationale": "The feature-disabled footer branch assigns only a constant empty string before hiding the navigation host."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:renderLinksList",
+      "context": "function:renderLinksList@path:body[69]/body/body[2]/consequent/body[0]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:2e6e6462218d9dc87b7db917ae9c6dc9583f486c01eb2e96a37847f892d06c08",
+      "occurrence": 1,
+      "disposition": "empty-clear",
+      "rationale": "The feature-disabled profile-link branch assigns only a constant empty string before hiding the host."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:renderLinksList",
+      "context": "function:renderLinksList@path:body[69]/body/body[5]/consequent/body[0]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:d6b8bca175ac1178073fca67a8f1d56309350b99eca00b41b377341a4f9ceb30",
+      "occurrence": 1,
+      "disposition": "press-renderer-output",
+      "rationale": "The empty profile-link state inserts only a fixed structural template plus first-party Press translation output for the message."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:renderLinksList",
+      "context": "function:renderLinksList@path:body[69]/body/body[6]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:9f1b1bb690a627b8615edc8844f933078047439577e9e5eae2b5ff87c7a80c27",
+      "occurrence": 1,
+      "disposition": "escaped-theme-template",
+      "rationale": "Profile URLs pass sanitizeUrl and both the resulting href and user-visible label are escaped before insertion."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:renderLoader",
+      "context": "function:renderLoader@path:body[79]/body/body[1]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:968be626a1692261f9f0b5791876b2be65d6fb3fb3e8ebb8d24592563dc483b3",
+      "occurrence": 1,
+      "disposition": "escaped-theme-template",
+      "rationale": "The loader skeleton is source-owned and the translated status message is escaped before insertion."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:renderNavLinks",
+      "context": "function:renderNavLinks@path:body[67]/body/body[9]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:af342ab97c5aaa8d50f21638df4d35ee08d72cbd9bcb4a29e23825daedb33429",
+      "occurrence": 1,
+      "disposition": "escaped-theme-template",
+      "rationale": "Navigation slugs, router-produced hrefs, and visible labels are all escaped before Arcus inserts its owned anchor template."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:renderStaticView",
+      "context": "function:renderStaticView@path:body[80]/body/body[2]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:d6b4feab18f1c5304d394a92333ac114852eb167047b0fd8efe151e197fe9dbd",
+      "occurrence": 1,
+      "disposition": "press-renderer-output",
+      "rationale": "The static-tab wrapper escapes the heading and inserts only HTML supplied by Press's reviewed Markdown rendering boundary."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:resetToolsPanel",
+      "context": "function:resetToolsPanel@path:body[75]/body/body[2]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:2bcea9205a1d1b370cdd92886dcf41f3cc50457f5f71701df5193aaf0b7e3882",
+      "occurrence": 1,
+      "disposition": "empty-clear",
+      "rationale": "The controls reset assigns only a constant empty string before remounting the trusted Press controls component."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:resetToolsPanel",
+      "context": "function:resetToolsPanel@path:body[75]/body/body[3]/argument",
+      "kind": "html-wrapper-call:setupToolsPanel",
+      "fingerprint": "sha256:e37862e76a56a4f0643cfb5e31c36d591a5e3775d293c8d8811089462d5f0e60",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates theme controls to the reviewed setup wrapper, whose only HTML write is a constant empty clear in the disabled branch."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:setupToolsPanel",
+      "context": "function:setupToolsPanel@path:body[74]/body/body[3]/consequent/body[0]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:f147dd56174af7d354483c0611e733e062244561d369784ddebb7f77914f097a",
+      "occurrence": 1,
+      "disposition": "empty-clear",
+      "rationale": "The disabled visitor-theme-controls branch assigns only a constant empty string before hiding the trusted controls host."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:showToc",
+      "context": "function:showToc@path:body[78]/body/body[2]/consequent/body[0]/expression",
+      "kind": "html-wrapper-call:clearArcusToc",
+      "fingerprint": "sha256:7c8e1b835b746953e6281d30a1ae4cdcfd654dae268fbfa07596b2e72ef25729",
+      "occurrence": 1,
+      "disposition": "trusted-wrapper-call",
+      "rationale": "This caller delegates TOC cleanup to the reviewed clearArcusToc wrapper, which can only invoke the trusted component clear method or assign a constant empty string."
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "owner": "function:showToc",
+      "context": "function:showToc@path:body[78]/body/body[3]/alternate/body[0]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:bf6518fd1ab928087f66ed0f1542eaa6e090befd143ae276f28105c83e2808d5",
+      "occurrence": 1,
+      "disposition": "press-renderer-output",
+      "rationale": "The fallback TOC template escapes its title and inserts tocHtml supplied by Press's reviewed TOC rendering boundary."
+    },
+    {
+      "path": "theme/modules/layout.js",
+      "owner": "function:mount/callback:ensureElement(container,literal:\"[data-arcus-backtotop]\")#3",
+      "context": "function:mount/callback:ensureElement(container,literal:\"[data-arcus-backtotop]\")#3@path:body[2]/declaration/body/body[17]/expression/arguments[2]/body/body[8]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:454cb5685d8a22284237111d2a2a6e73fd8d8563cb5f2d995242eb3b078641e1",
+      "occurrence": 1,
+      "disposition": "static-theme-template",
+      "rationale": "The back-to-top button inserts only a source-static owned SVG icon without interpolated input."
+    },
+    {
+      "path": "theme/modules/layout.js",
+      "owner": "function:mount/variable:header/callback:ensureElement(container,literal:\".arcus-header\")#3",
+      "context": "function:mount/variable:header/callback:ensureElement(container,literal:\".arcus-header\")#3@path:body[2]/declaration/body/body[5]/declarations[0]/init/arguments[2]/body/body[3]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:af37591c53613e16eed2e33c0849cf3ceb9711098cdb4a10976e5c3551ba5a0d",
+      "occurrence": 1,
+      "disposition": "static-theme-template",
+      "rationale": "The initial Arcus header shell is a source-static template with empty data hosts that runtime code later fills through reviewed boundaries."
+    },
+    {
+      "path": "theme/modules/layout.js",
+      "owner": "function:mount/variable:utilities/callback:ensureElement(rightColumn,literal:\".arcus-utility\")#3",
+      "context": "function:mount/variable:utilities/callback:ensureElement(rightColumn,literal:\".arcus-utility\")#3@path:body[2]/declaration/body/body[34]/declarations[0]/init/arguments[2]/body/body[3]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:6eec0dcc0074dd2d760e83234e7f777d4c067841551ada1b31520d6d1ebe2680",
+      "occurrence": 1,
+      "disposition": "static-theme-template",
+      "rationale": "The utility section inserts only Arcus-owned static structure for the trusted Press theme-controls host."
+    },
+    {
+      "path": "theme/modules/layout.js",
+      "owner": "function:mount",
+      "context": "function:mount@path:body[2]/declaration/body/body[11]/consequent/body[1]/alternate/body[3]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:07f3c0f0428ad6da779252fce9e7c90ed37773bc7b97749608004b7673536079",
+      "occurrence": 1,
+      "disposition": "static-theme-template",
+      "rationale": "The migration fallback inserts only a source-static empty profile-link list host."
+    },
+    {
+      "path": "theme/modules/layout.js",
+      "owner": "function:mount",
+      "context": "function:mount@path:body[2]/declaration/body/body[32]/consequent/body[3]/consequent/body[0]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:4374b749d48d5bc0f56eeff4a37252e1d1ca65c929a1d44f03d9adab12c56275",
+      "occurrence": 1,
+      "disposition": "static-theme-template",
+      "rationale": "The footer migration fallback inserts only Arcus-owned static structure and a source constant element id."
+    },
+    {
+      "path": "theme/modules/layout.js",
+      "owner": "function:mount",
+      "context": "function:mount@path:body[2]/declaration/body/body[44]/expression",
+      "kind": "innerHTML-write",
+      "fingerprint": "sha256:3a9a0dcebcac201544b09147016b0884b2ec017e636b5de9a2e0508422f0931c",
+      "occurrence": 1,
+      "disposition": "static-theme-template",
+      "rationale": "The search toggle inserts only a source-static icon and label with no interpolated input."
+    }
+  ]
+}
