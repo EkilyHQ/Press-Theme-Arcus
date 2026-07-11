@@ -1,0 +1,1152 @@
+{
+  "schemaVersion": 1,
+  "decision": "exact-owner-context-fingerprint-baseline-with-zero-growth",
+  "rules": ["no-empty", "no-unused-vars", "no-useless-assignment"],
+  "expectedCounts": {
+    "no-empty": 42,
+    "no-unused-vars": 71,
+    "no-useless-assignment": 1
+  },
+  "diagnostics": [
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:clearArcusToc",
+      "ownerPath": "body[77]/body/body[1]/consequent/body[0]/handler/body",
+      "fingerprint": "sha256:09e49927334af0ca175a7823503fb998fc3c55bf6d8bf0fe0f866fef7c926ebc",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:decorateArticle/callback:copyBtn.addEventListener(literal:\"click\")#2",
+      "ownerPath": "body[58]/body/body[2]/consequent/body[0]/expression/arguments[1]/body/body[3]/handler/body",
+      "fingerprint": "sha256:60e1a988aec537af3bcb7159efa6ccdc8b0e47493806069e821aec12241b844f",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:decorateArticle",
+      "ownerPath": "body[58]/body/body[7]/handler/body",
+      "fingerprint": "sha256:c127569b2704f7cd2222d4e2f151cdfad6a32534900b774209a90cf08d547e12",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:decorateArticle",
+      "ownerPath": "body[58]/body/body[8]/handler/body",
+      "fingerprint": "sha256:ce4801bce886138c6d695637292903e2ff1073e97c75fe683aef96b1225b365b",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:enhanceArcusTocDock/function:scrollToHeading",
+      "ownerPath": "body[76]/body/body[26]/body/body[7]/consequent/body[4]/consequent/body[0]/handler/body",
+      "fingerprint": "sha256:2e264f9b6c9018135e055d0a19f2354ffe23021c59c20b2f602bb8ea937f1f73",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:getCurrentLang",
+      "ownerPath": "body[33]/body/body[1]/handler/body",
+      "fingerprint": "sha256:96deac79203e7c7e74f9b6dbbb439769f444efd87edef9c5eaba858543ac4580",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:getCurrentLang",
+      "ownerPath": "body[33]/body/body[2]/handler/body",
+      "fingerprint": "sha256:60e68de1c7f7240aeec174d8c6ff3395654ba6ceff59d0399f5c8ea6b9cb7392",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:getCurrentLang",
+      "ownerPath": "body[33]/body/body[3]/handler/body",
+      "fingerprint": "sha256:3a766ce6d42f55ebef905a4b0c3e37aecef2eead6ad203a0dd53fed3e2920754",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:getMainRegion",
+      "ownerPath": "body[27]/body/body[4]/handler/body",
+      "fingerprint": "sha256:076a0b99567dddbbff5501d399e867968c9e3334675cf51c49be7528463db203",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:getRegion",
+      "ownerPath": "body[26]/body/body[2]/handler/body",
+      "fingerprint": "sha256:cd8d302eb65a1193b1dcd67b212f28fb64cba733ef40eeb63a9eb372893e1ba1",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:getRegion",
+      "ownerPath": "body[26]/body/body[3]/handler/body",
+      "fingerprint": "sha256:5f54cc9f0ed80742e66d6bf41b23828dc80a8d9fde98a48687d58056f12ee504",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:getScrollState",
+      "ownerPath": "body[40]/body/body[1]/handler/body",
+      "fingerprint": "sha256:8ff4aef135388df02062a7fa908e470f7781100e9e4e04eeb7393cfe01a456e9",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.afterIndexRender",
+      "ownerPath": "body[81]/body/body[22]/expression/right/body/body[1]/handler/body",
+      "fingerprint": "sha256:564538bdab0c2fca4be9a3f9f05c0c6d1a928487a1054dc4c95ccc75035588a8",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.afterIndexRender",
+      "ownerPath": "body[81]/body/body[22]/expression/right/body/body[2]/handler/body",
+      "fingerprint": "sha256:857e926ef8098fc8cf06bdaab9a5dbeeac94547fc1e74a3dc56b5a517e319b6b",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.afterSearchRender",
+      "ownerPath": "body[81]/body/body[24]/expression/right/body/body[1]/handler/body",
+      "fingerprint": "sha256:e223e82545c3c06c7237291afb36e9933fd4e1b338a89216ebf3a71a62960953",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.afterSearchRender",
+      "ownerPath": "body[81]/body/body[24]/expression/right/body/body[2]/handler/body",
+      "fingerprint": "sha256:23f2478b0ea6f6e3d7a766b0de87ab6d41ebe256f6b3d5563b7f97c11fb64495",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.enhanceIndexLayout",
+      "ownerPath": "body[81]/body/body[14]/expression/right/body/body[1]/handler/body",
+      "fingerprint": "sha256:2e0110f350510000a27ddeb725ad9bfd4a040a3b79e7a31a135aec1fb995e7a9",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.enhanceIndexLayout",
+      "ownerPath": "body[81]/body/body[14]/expression/right/body/body[2]/handler/body",
+      "fingerprint": "sha256:86ae9f957a872da1b7181da492c6163d3cae47dda7bf5fa7662195baca310b03",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.enhanceIndexLayout",
+      "ownerPath": "body[81]/body/body[14]/expression/right/body/body[3]/handler/body",
+      "fingerprint": "sha256:78e4a7f51ae76d8a48d4e7dc9ced2eb754d1d7cd8a6979e0860b6e3283137f79",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.enhanceIndexLayout",
+      "ownerPath": "body[81]/body/body[14]/expression/right/body/body[4]/handler/body",
+      "fingerprint": "sha256:3252ad487f408aaa7ae2e1f1706865525183a2b37b416656009d8d128bd63a93",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.renderPostView",
+      "ownerPath": "body[81]/body/body[18]/expression/right/body/body[14]/handler/body",
+      "fingerprint": "sha256:3f3631e3440d38705f267d1b090ac977d861a4a9ddd71a379047002ddd0346f1",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabView",
+      "ownerPath": "body[81]/body/body[26]/expression/right/body/body[10]/handler/body",
+      "fingerprint": "sha256:2bb2773ad9737c3b03ede07fa3a077b9ef625b5dd9dc6955d5ad632cb8b95937",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabView",
+      "ownerPath": "body[81]/body/body[26]/expression/right/body/body[11]/handler/body",
+      "fingerprint": "sha256:d8a3cfb8662078c05b932ba99300ca1cbff5e7bfbcd47a36bf9fe0ad9bd161cd",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabView",
+      "ownerPath": "body[81]/body/body[26]/expression/right/body/body[7]/handler/body",
+      "fingerprint": "sha256:8c7e060fee5f9e08cc318cc07b7a859f144421599190d4d413c0d7fa90815f2c",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabView",
+      "ownerPath": "body[81]/body/body[26]/expression/right/body/body[8]/handler/body",
+      "fingerprint": "sha256:2e9d2d3580a704631d22144c67084236aecd5a18dfedd96a0d2e3ea253a9537b",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabView",
+      "ownerPath": "body[81]/body/body[26]/expression/right/body/body[9]/handler/body",
+      "fingerprint": "sha256:d1c387a31aed7f58489e4430fbb5e83aab5bc4939e163d148450c5ac8ab81390",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:mountHooks/assignment:hooks.renderTagSidebar",
+      "ownerPath": "body[81]/body/body[13]/expression/right/body/body[4]/handler/body",
+      "fingerprint": "sha256:f7f63b2097ecb345b1608679bd24db6f126f64f810b4a58c1095ff584fb12a92",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:restoreScrollState",
+      "ownerPath": "body[41]/body/body[3]/consequent/body[0]/handler/body",
+      "fingerprint": "sha256:3e33ae9e32a3c58f44d063dfe1cdf44bd6df3242329f94da02a7c4f81f10693c",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:restoreScrollState",
+      "ownerPath": "body[41]/body/body[4]/handler/body",
+      "fingerprint": "sha256:68131ff8078b7fbfeb5a50b6da25db77bfe988675593fa227b7d419390c978c9",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:setChromeHidden",
+      "ownerPath": "body[23]/body/body[1]/handler/body",
+      "fingerprint": "sha256:eeb2c6c10e4396894bd0e107042a2b7a0a69a91d29923b94b912f4c0a5ae3828",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:setChromeHidden",
+      "ownerPath": "body[23]/body/body[2]/handler/body",
+      "fingerprint": "sha256:e1d74b1fc8e74bb1395054e08259e89b17cb9c45c538c8821a7bb4a5621b4aae",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:setHomeLinkHref",
+      "ownerPath": "body[24]/body/body[1]/consequent/body[0]/handler/body",
+      "fingerprint": "sha256:29bebd59298bb5986c5bd5113f9fc7cd205bdd2845f583e2728d33d3fe878d60",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:setHomeLinkHref",
+      "ownerPath": "body[24]/body/body[1]/consequent/body[1]/handler/body",
+      "fingerprint": "sha256:cf7828257270511aa86e9cd299475a64831c768d4b09a0158867d76d4651c78d",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:setHomeLinkHref",
+      "ownerPath": "body[24]/body/body[1]/consequent/body[2]/handler/body",
+      "fingerprint": "sha256:3af9eed01aec28f41d044a43ad3b0007cc21aabc784b94182295ad73fc270fc9",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:setHomeLinkHref",
+      "ownerPath": "body[24]/body/body[2]/handler/body",
+      "fingerprint": "sha256:f32545ed5227f44a0856aa25ac586b4aa33ae587abf2f2f2cf891bc29929bce2",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:setHomeLinkHref",
+      "ownerPath": "body[24]/body/body[3]/handler/body",
+      "fingerprint": "sha256:135c8809d542df7865f2dd7265f22ecd59e0154b778918cd8013cca59ef88761",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:setHomeLinkHref",
+      "ownerPath": "body[24]/body/body[4]/handler/body",
+      "fingerprint": "sha256:de3ee66c7bafe5ac9979877120f24138bbc1764e39ef22101103ce413299f8a9",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:setupToolsPanel",
+      "ownerPath": "body[74]/body/body[6]/handler/body",
+      "fingerprint": "sha256:dd8e20f5f440b3ca820d4ab487c38d95760b529c48bfe4742a624c31af9311de",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:setupToolsPanel",
+      "ownerPath": "body[74]/body/body[7]/handler/body",
+      "fingerprint": "sha256:226882e7fca375ceb83dc6f51771b22ffac50e19aef71b525e61be4c2949c947",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:showToc",
+      "ownerPath": "body[78]/body/body[1]/consequent/body[0]/handler/body",
+      "fingerprint": "sha256:4ff5b46aa36ed309e0846b0ae8b3db970dbe8b3e9acb1d55b93768ce8d641c39",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:t",
+      "ownerPath": "body[34]/body/body[1]/handler/body",
+      "fingerprint": "sha256:56b5ca2f76171cc60879ed0a3ca2ad3fbe947a6adce46c3632c18c3e49082382",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-empty",
+      "messageId": "unexpected",
+      "message": "Empty block statement.",
+      "owner": "function:withLangParam",
+      "ownerPath": "body[35]/body/body[1]/handler/body",
+      "fingerprint": "sha256:a6be6d45a80653d8af71a2ecd2b8d04291ffb41c634732753bb6336cc788fee5",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:buildPagination/variable:mkHref",
+      "ownerPath": "body[57]/body/body[1]/declarations[0]/init/body/body[0]/consequent/body[0]/handler/param",
+      "fingerprint": "sha256:d51a9ec59ce9258a24b76e5e9ff0879275621fb391e83300cc4c33e145244331",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:clearArcusToc",
+      "ownerPath": "body[77]/body/body[1]/consequent/body[0]/handler/param",
+      "fingerprint": "sha256:495c01212ae10d17c5ab768e5fd97158c284fc21fb9eddd4758d0cf9015f7a15",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:decorateArticle/callback:copyBtn.addEventListener(literal:\"click\")#2",
+      "ownerPath": "body[58]/body/body[2]/consequent/body[0]/expression/arguments[1]/body/body[3]/handler/param",
+      "fingerprint": "sha256:9fac2eeca434dab3528c46abbae99329e097f58a9423d03f58749576bb945b6d",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:decorateArticle",
+      "ownerPath": "body[58]/body/body[7]/handler/param",
+      "fingerprint": "sha256:9167e8fa7aba9f9ed2cd47ff94bc971957997705ad8cd3c03959f9a982c06b18",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:decorateArticle",
+      "ownerPath": "body[58]/body/body[8]/handler/param",
+      "fingerprint": "sha256:f4f0accc44575e3d17a0901afd27eaf7c06b6b483c5d4d48bb00731a9dca0931",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:enhanceArcusTocDock/function:scrollToHeading",
+      "ownerPath": "body[76]/body/body[26]/body/body[11]/handler/param",
+      "fingerprint": "sha256:11262eb1aa55ad615cc72870e97c063e57ae84824539a5131f5e0427cf38fb1e",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:enhanceArcusTocDock/function:scrollToHeading",
+      "ownerPath": "body[76]/body/body[26]/body/body[6]/handler/param",
+      "fingerprint": "sha256:272fb074541d8c9f05b03e2aff37fa7e0df8c6dc086bd962e99e5cd19bc91b5d",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:enhanceArcusTocDock/function:scrollToHeading",
+      "ownerPath": "body[76]/body/body[26]/body/body[7]/consequent/body[2]/consequent/body[0]/handler/param",
+      "fingerprint": "sha256:cc69f202889aa7e8de553f896b76e0784fc84ad3b940ce69e3ed301b1f9cc54f",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:enhanceArcusTocDock/function:scrollToHeading",
+      "ownerPath": "body[76]/body/body[26]/body/body[7]/consequent/body[3]/consequent/body[0]/handler/param",
+      "fingerprint": "sha256:0e68c2bd1323c391b84d158a48f4f40c1575b0f91a10f8691819c7a8d0f810f9",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:enhanceArcusTocDock/function:scrollToHeading",
+      "ownerPath": "body[76]/body/body[26]/body/body[7]/consequent/body[4]/consequent/body[0]/handler/param",
+      "fingerprint": "sha256:d02365ceec998d78c430a7d6e02ec6fc612770ce0b37f1ac92822a09d8e714af",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:getCurrentLang",
+      "ownerPath": "body[33]/body/body[1]/handler/param",
+      "fingerprint": "sha256:ff71e11314e9f83ee78d9828e2a0462006e83166adba87c0dc228107c0d2acc7",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:getCurrentLang",
+      "ownerPath": "body[33]/body/body[2]/handler/param",
+      "fingerprint": "sha256:e4513a08c2c429fda2699c86d564ef14ee3058c3f76c8d80b8ed70b14d7333d6",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:getCurrentLang",
+      "ownerPath": "body[33]/body/body[3]/handler/param",
+      "fingerprint": "sha256:963824205809e98887cbde92ae66b530304bc424a349b2d4f0153f88349f9baa",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:getMainRegion",
+      "ownerPath": "body[27]/body/body[4]/handler/param",
+      "fingerprint": "sha256:5990c39385b6c96ecc10b348d6f953e2185e6152aaef95c2a05f2993e059aeeb",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:getRegion",
+      "ownerPath": "body[26]/body/body[2]/handler/param",
+      "fingerprint": "sha256:f808385bf5aee4c846fba4dd9535c07cf2096c14b0f2779e66042ef18926ad61",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:getRegion",
+      "ownerPath": "body[26]/body/body[3]/handler/param",
+      "fingerprint": "sha256:a7b008836368d4877cf5bfb8abf15d8455bcde3e271b53dd9549930a8e304f14",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:getRegion",
+      "ownerPath": "body[26]/body/body[5]/handler/param",
+      "fingerprint": "sha256:99aebb9c39ccb150b5ac53f68ddfc50bedb5cceb550f2dbbf99c7ca467bdfb05",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:getRouteHref",
+      "ownerPath": "body[22]/body/body[2]/handler/param",
+      "fingerprint": "sha256:fa65867a381cd147ebfae386c3120effb674e0383026964901efeaf6e758b56a",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:getScrollState",
+      "ownerPath": "body[40]/body/body[1]/handler/param",
+      "fingerprint": "sha256:c5006b25be0998cb766d028bc28e18b800f8afeca089bb97d3ac8e2e32527f52",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:getScrollState",
+      "ownerPath": "body[40]/body/body[2]/handler/param",
+      "fingerprint": "sha256:5694e0ff6d3449f1bfa6eb1b6e06b77e24881deb9b0da0a9073b08a57dac4988",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.afterIndexRender",
+      "ownerPath": "body[81]/body/body[22]/expression/right/body/body[1]/handler/param",
+      "fingerprint": "sha256:6ee69c73af3b5e1886e5d0b8e21f920ee9da4fa849571283a8534bee04578e4e",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.afterIndexRender",
+      "ownerPath": "body[81]/body/body[22]/expression/right/body/body[2]/handler/param",
+      "fingerprint": "sha256:9572e20561bb33660dc7a9384be4bc4c1f7697b72d4e2767adf9d2e696913579",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.afterSearchRender",
+      "ownerPath": "body[81]/body/body[24]/expression/right/body/body[1]/handler/param",
+      "fingerprint": "sha256:b69aa56240a60f7f6764f75897fd8a9f364f4482d32dcffb17db63df02bddde1",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.afterSearchRender",
+      "ownerPath": "body[81]/body/body[24]/expression/right/body/body[2]/handler/param",
+      "fingerprint": "sha256:3c2fe810646baa9d447b211d5d41038a77f07459ef8240ea7315c9298e1f6778",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.enhanceIndexLayout",
+      "ownerPath": "body[81]/body/body[14]/expression/right/body/body[1]/handler/param",
+      "fingerprint": "sha256:00419f5cf90aaf0f28410db936b91de4b7a50984aabf1319ebff62df0ba8495e",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.enhanceIndexLayout",
+      "ownerPath": "body[81]/body/body[14]/expression/right/body/body[2]/handler/param",
+      "fingerprint": "sha256:9c271bb930d898989fda56f5d1a1e4356d48e9e929cae28bc091e219d2152c97",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.enhanceIndexLayout",
+      "ownerPath": "body[81]/body/body[14]/expression/right/body/body[3]/handler/param",
+      "fingerprint": "sha256:45d17d20e7c7b8e89c516ce7e48f47a5ccf205090ef6d6e77b011adf901a3e03",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.enhanceIndexLayout",
+      "ownerPath": "body[81]/body/body[14]/expression/right/body/body[4]/handler/param",
+      "fingerprint": "sha256:f6c68f648154fbc35f417d5ccfec27dd0fd33ef6707cdf9ac7d2344b61f44448",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.renderPostView",
+      "ownerPath": "body[81]/body/body[18]/expression/right/body/body[13]/handler/param",
+      "fingerprint": "sha256:a7a8a54276547170b2fdd21503b41ebc003268ad15318fe442d9e00a1bf3adae",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.renderPostView",
+      "ownerPath": "body[81]/body/body[18]/expression/right/body/body[14]/handler/param",
+      "fingerprint": "sha256:7b155595d870175736b5115eabcacad31e5439698a917139c27330350ac1d6cb",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabView",
+      "ownerPath": "body[81]/body/body[26]/expression/right/body/body[10]/handler/param",
+      "fingerprint": "sha256:d098a2d2b18c073c06356711071de73cf3c9625fe8a85348b514518eb37bd6d3",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabView",
+      "ownerPath": "body[81]/body/body[26]/expression/right/body/body[11]/handler/param",
+      "fingerprint": "sha256:d6213adabd00323d9a5c05b9bc0618f4cfe6f88e22c71ae45d1550d846783ce5",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabView",
+      "ownerPath": "body[81]/body/body[26]/expression/right/body/body[7]/handler/param",
+      "fingerprint": "sha256:6e2d5cca10dc11d99205b5caa942f9e5e55da23c785f218d4edeb9996678654d",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabView",
+      "ownerPath": "body[81]/body/body[26]/expression/right/body/body[8]/handler/param",
+      "fingerprint": "sha256:802a434477869ec304d3f742002a4bd4ae34e0f7cbe5c142c656aa213a686d89",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.renderStaticTabView",
+      "ownerPath": "body[81]/body/body[26]/expression/right/body/body[9]/handler/param",
+      "fingerprint": "sha256:18a222501de709d7662324417529efce240fb15cd65848dd96bfad7d1ed42688",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.renderTagSidebar",
+      "ownerPath": "body[81]/body/body[13]/expression/right/body/body[4]/handler/param",
+      "fingerprint": "sha256:e86e60fe04ea16ba9fbdc70c4ae7ea2fe1b69c6c8ef47b4de85d207fdba63a52",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:mountHooks/assignment:hooks.scrollToHash",
+      "ownerPath": "body[81]/body/body[20]/expression/right/body/body[1]/handler/param",
+      "fingerprint": "sha256:e15372b9644c84597b321318ef0c8fc68df08582b2ac484e681cdac6081d20fa",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:observeNavOverflow",
+      "ownerPath": "body[66]/body/body[10]/consequent/body[0]/handler/param",
+      "fingerprint": "sha256:1d7fd66915dbba9ccfc5600f1ac201d1c9735105d2d4abb85c23602e20a7da33",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:observeNavOverflow",
+      "ownerPath": "body[66]/body/body[1]/consequent/body[0]/handler/param",
+      "fingerprint": "sha256:74278df4e3e51349d83f1d9ddf181dfb38677758a9c8378a965983e555c6f22a",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:populateThemePackOptions/variable:ensureSavedOptionVisible",
+      "ownerPath": "body[73]/body/body[5]/declarations[0]/init/body/body[1]/handler/param",
+      "fingerprint": "sha256:ec4e5d8407881cf356cc142f559e42a25e934cea76304b1fa576b6acb15ec227",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:populateThemePackOptions",
+      "ownerPath": "body[73]/body/body[9]/handler/param",
+      "fingerprint": "sha256:9f2a43817f871d70b158b33dd660c7f46298a548640e1d47c4b1bdfbb0c26816",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:resolveCoverSource",
+      "ownerPath": "body[44]/body/body[5]/consequent/body[2]/consequent/body[2]/consequent/body[3]/consequent/body[0]/handler/param",
+      "fingerprint": "sha256:47363bd867a0fce1af5d6a118e82b805f0669d2557eac23df17245d6be316b2a",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:restoreScrollState",
+      "ownerPath": "body[41]/body/body[3]/consequent/body[0]/handler/param",
+      "fingerprint": "sha256:1c6cf5f315f2837296185dc41ec88e532f21014fdb1dd6347fad9b54c411db9c",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:restoreScrollState",
+      "ownerPath": "body[41]/body/body[4]/handler/param",
+      "fingerprint": "sha256:d6948d4ae593de57c36837b6cff529baa8019fb018759d17a894d7fa04fe6e69",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:scrollElementToTop",
+      "ownerPath": "body[38]/body/body[1]/handler/param",
+      "fingerprint": "sha256:f6da4fe015e9e8f18a6af3e244160b4df84413c2b92e11c518be349fb3301110",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:scrollElementToTop",
+      "ownerPath": "body[38]/body/body[2]/handler/param",
+      "fingerprint": "sha256:d7a06988fc549bf4789f09da8f9d6e6ab6ffca6fe2b00c65002a58403521ba4b",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:scrollViewportToTop",
+      "ownerPath": "body[39]/body/body[4]/handler/param",
+      "fingerprint": "sha256:3aaf876d78f0742abab00f53007e784e1fb1e3e988546d909ffdc41a442bbcb3",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:scrollViewportToTop",
+      "ownerPath": "body[39]/body/body[5]/handler/param",
+      "fingerprint": "sha256:f57b70e0ae4b401da5e90fa3ac795fc3114b7169a293ecb3f548781ddb5f9f7e",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:scrollViewportToTop",
+      "ownerPath": "body[39]/body/body[6]/handler/param",
+      "fingerprint": "sha256:6ea09dd75a033775ecf72693218f2d82ccd109f7546547a2f8ba1fc3a0b46e91",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:setChromeHidden",
+      "ownerPath": "body[23]/body/body[1]/handler/param",
+      "fingerprint": "sha256:8edcd467033c1660c813e2387dd418c2ae49c337b680702ab39747c035b54d7f",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:setChromeHidden",
+      "ownerPath": "body[23]/body/body[2]/handler/param",
+      "fingerprint": "sha256:69dd521c3e62f5f01867431b4f5ad4a2656ffa6a17078d477b29b1e7b268a013",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:setHomeLinkHref",
+      "ownerPath": "body[24]/body/body[1]/consequent/body[0]/handler/param",
+      "fingerprint": "sha256:50ba60a465336ac69e9d5b86210987697533e32b6042ad90a915088ac8860034",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:setHomeLinkHref",
+      "ownerPath": "body[24]/body/body[1]/consequent/body[1]/handler/param",
+      "fingerprint": "sha256:993585de6c8796f1a0dd13b79f5ba1fde7b87ca736ede99e0c521b744f72d118",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:setHomeLinkHref",
+      "ownerPath": "body[24]/body/body[1]/consequent/body[2]/handler/param",
+      "fingerprint": "sha256:3a3df934674bab8483de1209f12db5c06bdaeea22fd6ff3d6059cfe0de2a107c",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:setHomeLinkHref",
+      "ownerPath": "body[24]/body/body[2]/handler/param",
+      "fingerprint": "sha256:5d277e71b2217760ad605a2b716bbb56e3d72dbb4dfab38fcd4308fca06e8f6e",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:setHomeLinkHref",
+      "ownerPath": "body[24]/body/body[3]/handler/param",
+      "fingerprint": "sha256:5964525d47824d9573ac5f39ddb01eea8ba850ae3a925bdf05312ce5be052950",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:setHomeLinkHref",
+      "ownerPath": "body[24]/body/body[4]/handler/param",
+      "fingerprint": "sha256:43c346ade7413fe5c469fc184f1c00e463ff117b1b0978470ddda9333be39b09",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:setupToolsPanel",
+      "ownerPath": "body[74]/body/body[6]/handler/param",
+      "fingerprint": "sha256:867d4f7797cfba0bb21d516346a8378ed8b3258914f31a5af7efe60f9f7db83f",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:setupToolsPanel",
+      "ownerPath": "body[74]/body/body[7]/handler/param",
+      "fingerprint": "sha256:eaf9c4b4e4b565ef40d18c7fa63b15e8fa347d77462ed4f5d968171652fb91c0",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:showToc",
+      "ownerPath": "body[78]/body/body[1]/consequent/body[0]/handler/param",
+      "fingerprint": "sha256:8135225848c530e2ff4b75a7b0deb21fa4d6070b5e7c4eb63f474bd8c7796f0c",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:t",
+      "ownerPath": "body[34]/body/body[1]/handler/param",
+      "fingerprint": "sha256:5ad23368ee01415ecb56560d93d15f4c25dc281abafd9f24d6115d6c9754ac79",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:withLangParam",
+      "ownerPath": "body[35]/body/body[1]/handler/param",
+      "fingerprint": "sha256:a05231843f7daba6c74678473c5e8f77eecae31cfd495d270120a054478732e9",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'_' is defined but never used.",
+      "owner": "function:withLangParam",
+      "ownerPath": "body[35]/body/body[4]/handler/param",
+      "fingerprint": "sha256:5428fd8b7012f91312d6f715ebf5e4ec5618c6e6ce7cc4da1f25f5951ed4c494",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'bindPostEditor' is defined but never used.",
+      "owner": "<module>",
+      "ownerPath": "body[1]/specifiers[4]/imported",
+      "fingerprint": "sha256:41a975fc1f032c183cb5b72f4b8caa135cc9bd43993925830819bf391081b6dc",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'bindThemePackPicker' is defined but never used.",
+      "owner": "<module>",
+      "ownerPath": "body[1]/specifiers[3]/imported",
+      "fingerprint": "sha256:b178868252fe1dd8fc82a86640bbb5348984ca8e2152d98ce4d6f7d4414a8153",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'bindThemeToggle' is defined but never used.",
+      "owner": "<module>",
+      "ownerPath": "body[1]/specifiers[2]/imported",
+      "fingerprint": "sha256:8c4694a5e0e30058f91a4016f95850d0fb584de62cf550d665ce5e568cca9ed2",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'populateThemePackOptions' is defined but never used.",
+      "owner": "function:populateThemePackOptions",
+      "ownerPath": "body[73]/id",
+      "fingerprint": "sha256:42975b4733a2ae4d246d4e416cb19cd66e6671465810494d7051236555bdcdab",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'refreshLanguageSelector' is defined but never used.",
+      "owner": "<module>",
+      "ownerPath": "body[1]/specifiers[5]/imported",
+      "fingerprint": "sha256:3fb2d18b2a0ea9c11416b034375d1bf4893a09ebced326cc50ac8d532286b97f",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'title' is defined but never used.",
+      "owner": "function:hydrateArcusCardExcerpts/callback:entries.forEach()#1",
+      "ownerPath": "body[55]/body/body[7]/expression/arguments[0]/params[0]/elements[0]",
+      "fingerprint": "sha256:e675dae072177dcef3807d148131bccef361cbf0b7318d0166253c48fb0c6f8b",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'translate' is defined but never used.",
+      "owner": "function:buildCard",
+      "ownerPath": "body[53]/params[0]/properties[2]/key",
+      "fingerprint": "sha256:34fc64467064fefb532f1b8173578179c73084f02eecde11c80baa2d6bcc3f40",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-unused-vars",
+      "messageId": "unusedVar",
+      "message": "'windowRef' is assigned a value but never used.",
+      "owner": "function:setupToolsPanel",
+      "ownerPath": "body[74]/params[1]/left",
+      "fingerprint": "sha256:5e303071644040bed4467a69ef1273e3ce42daf58b09a8864e7e189e475513ed",
+      "occurrence": 1
+    },
+    {
+      "path": "theme/modules/interactions.js",
+      "rule": "no-useless-assignment",
+      "messageId": "unnecessaryAssignment",
+      "message": "The value assigned to 'saved' is not used in subsequent statements.",
+      "owner": "function:populateThemePackOptions/variable:ensureSavedOptionVisible",
+      "ownerPath": "body[73]/body/body[5]/declarations[0]/init/body/body[0]/declarations[0]/id",
+      "fingerprint": "sha256:55289b31aef52397f6d25a912980c0ce29ce65fcfde8a438550c47bedd4c2ec9",
+      "occurrence": 1
+    }
+  ]
+}

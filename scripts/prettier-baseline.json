@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    "scripts/demo-site-data.json",
+    "scripts/resolve-press-system-release.js",
+    "scripts/test-press-system-lock.js",
+    "scripts/test-public-chrome-features.mjs",
+    "scripts/test-release-intent-resolution.js",
+    "scripts/test-theme-demo-release-lock.js",
+    "scripts/write-press-system-lock.js",
+    "scripts/write-theme-demo-release-lock.js",
+    "theme/modules/interactions.js",
+    "theme/modules/layout.js",
+    "theme/theme.css"
+  ]
+}
