@@ -121,6 +121,24 @@ function resolveConstExpression(node, resolveIdentifier, seen = new Set()) {
 function isDocumentReference(node, resolveIdentifier = null, resolveDocumentBinding = null, seen = new Set()) {
   const current = unwrap(node);
   if (!current) return false;
+  if (current.type === 'LogicalExpression') {
+    return (
+      isDocumentReference(current.left, resolveIdentifier, resolveDocumentBinding, seen) ||
+      isDocumentReference(current.right, resolveIdentifier, resolveDocumentBinding, seen)
+    );
+  }
+  if (current.type === 'ConditionalExpression') {
+    return (
+      isDocumentReference(current.consequent, resolveIdentifier, resolveDocumentBinding, seen) ||
+      isDocumentReference(current.alternate, resolveIdentifier, resolveDocumentBinding, seen)
+    );
+  }
+  if (current.type === 'SequenceExpression') {
+    return isDocumentReference(current.expressions.at(-1), resolveIdentifier, resolveDocumentBinding, seen);
+  }
+  if (current.type === 'AssignmentExpression') {
+    return isDocumentReference(current.right, resolveIdentifier, resolveDocumentBinding, seen);
+  }
   if (current.type === 'Identifier') {
     if (/^(?:doc|document|documentRef)$/u.test(current.name)) return true;
     if (resolveDocumentBinding?.(current)) return true;
@@ -250,6 +268,19 @@ function parseJavaScript({ filePath, source, wrapperNames }) {
           isDocumentReference(node, resolveIdentifier, (candidate) =>
             DOCUMENT_REFERENCE_PROPERTIES.has(documentBindingProperty(candidate, nextSeen))
           );
+        const arrayPatternDocumentProperty = (binding, ancestors, sourceNode) => {
+          const patternIndex = ancestors.findLastIndex((ancestor) => ancestor.type === 'ArrayPattern');
+          if (patternIndex < 0) return '';
+          const pattern = ancestors[patternIndex];
+          const child = [...ancestors, binding][patternIndex + 1];
+          const elementIndex = pattern.elements.indexOf(child);
+          if (elementIndex < 0) return '';
+          if (child?.type === 'AssignmentPattern' && isDocumentOrigin(child.right)) return 'document';
+          const source = resolveConstExpression(sourceNode, resolveIdentifier);
+          if (source?.type !== 'ArrayExpression') return '';
+          const sourceElement = source.elements[elementIndex];
+          return sourceElement && isDocumentOrigin(sourceElement) ? 'document' : '';
+        };
         for (const binding of variable.identifiers) {
           if (binding.name !== identifier.name) continue;
           const ancestors = sourceCode.getAncestors(binding);
@@ -259,6 +290,10 @@ function parseJavaScript({ filePath, source, wrapperNames }) {
             return objectPropertyName(property, resolveIdentifier);
           }
           const declarator = ancestors.findLast((ancestor) => ancestor.type === 'VariableDeclarator');
+          const arrayProperty = declarator?.init
+            ? arrayPatternDocumentProperty(binding, ancestors, declarator.init)
+            : '';
+          if (arrayProperty) return arrayProperty;
           if (declarator?.id === binding && declarator.init && isDocumentOrigin(declarator.init)) return 'document';
         }
         for (const reference of variable.references) {
@@ -274,6 +309,13 @@ function parseJavaScript({ filePath, source, wrapperNames }) {
             if (DOCUMENT_REFERENCE_PROPERTIES.has(propertyName)) return propertyName;
           }
           const assignment = ancestors.at(-1);
+          const patternAssignment = ancestors.findLast(
+            (ancestor) => ancestor.type === 'AssignmentExpression' && ancestor.left?.type === 'ArrayPattern'
+          );
+          const arrayProperty = patternAssignment
+            ? arrayPatternDocumentProperty(reference.identifier, ancestors, patternAssignment.right)
+            : '';
+          if (arrayProperty) return arrayProperty;
           if (
             assignment?.type === 'AssignmentExpression' &&
             assignment.left === reference.identifier &&

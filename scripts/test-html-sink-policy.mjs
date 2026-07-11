@@ -231,6 +231,31 @@ assert.deepEqual(
   'document write aliases, call indirection, reflective lookup, contentDocument, and ownerDocument must fail closed'
 );
 
+const documentExpressionAliases = scanJavaScriptSource({
+  filePath: 'theme/modules/document-expression-aliases.js',
+  source: `
+    export function render(frame, flag, textTarget, markup) {
+      const logicalDocument = frame.contentDocument || document;
+      const conditionalDocument = flag ? frame.ownerDocument : document;
+      const sequenceDocument = (prepare(), frame.contentDocument);
+      const safeSequence = (document, textTarget);
+      const [arrayDocument] = [frame.ownerDocument];
+      const [defaultDocument = document] = [];
+      logicalDocument.write(markup);
+      conditionalDocument.writeln(markup);
+      sequenceDocument.write(markup);
+      safeSequence.write(markup);
+      arrayDocument.writeln(markup);
+      defaultDocument.write(markup);
+    }
+  `
+});
+assert.deepEqual(
+  documentExpressionAliases.map(({ kind }) => kind),
+  ['document-write-call', 'document-write-call', 'document-write-call', 'document-write-call', 'document-write-call'],
+  'logical, conditional, result-sequence, matched array, and defaulted array document aliases must classify while a safe final sequence value stays clean'
+);
+
 const dynamicParserMimes = scanJavaScriptSource({
   filePath: 'theme/modules/dynamic-parser.js',
   source: `
