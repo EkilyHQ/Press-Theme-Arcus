@@ -79,6 +79,8 @@ assert.match(eslintConfig, /noInlineConfig:\s*true/u, 'source comments must not 
 assert.match(eslintConfig, /reportUnusedDisableDirectives:\s*'error'/u);
 assert.match(eslintConfig, /sourceType:\s*'commonjs'/u, 'existing .js tooling must remain CommonJS');
 assert.match(eslintConfig, /sourceType:\s*'module'/u, 'theme and .mjs tooling must parse as modules');
+assert.match(eslintConfig, /files:\s*\['\*\.js', 'scripts\/\*\*\/\*\.js'\]/u);
+assert.match(eslintConfig, /files:\s*\['\*\.mjs', 'scripts\/\*\*\/\*\.mjs'\]/u);
 assert.match(eslintConfig, /LEGACY_INERT_DIRECTIVE = '\/\/ eslint-disable-line no-restricted-globals'/u);
 assert.match(eslintConfig, /LEGACY_INERT_CONTEXT = `location\.href = href; \$\{LEGACY_INERT_DIRECTIVE\}`/u);
 assert.match(eslintConfig, /legacy inert ESLint directive unexpectedly grew/u);
@@ -166,6 +168,8 @@ for (const token of [
   'suppressedMessages',
   "ruleId === 'no-undef'",
   'severity',
+  'rootModuleProbePath',
+  'rootCommonProbePath',
   'legacy inert ESLint directive unexpectedly grew'
 ]) {
   assert.ok(eslintPolicyTest.includes(token), `ESLint policy proof must retain ${token}`);
@@ -346,6 +350,9 @@ assert.match(htmlSinkCheck, /Reflect\.set-/u);
 assert.match(htmlSinkCheck, /Object\.assign-/u);
 assert.match(htmlSinkCheck, /Object\.defineProperty-/u);
 assert.match(htmlSinkCheck, /Object\.defineProperties-/u);
+assert.match(htmlSinkCheck, /getOwnPropertyDescriptor/u);
+assert.match(htmlSinkCheck, /html-assignment-unproven-property/u);
+assert.match(htmlSinkCheck, /html-call-unproven-property/u);
 assert.match(htmlSinkCheck, /DOMParser-unproven-mime-call/u);
 assert.match(htmlSinkCheck, /contentDocument/u);
 assert.match(htmlSinkCheck, /ownerDocument/u);
